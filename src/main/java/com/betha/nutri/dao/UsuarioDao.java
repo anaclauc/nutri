@@ -2,6 +2,7 @@ package com.betha.nutri.dao;
 
 import com.betha.nutri.model.Usuario;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class UsuarioDao {
@@ -26,7 +27,7 @@ public class UsuarioDao {
 
     public Usuario atualizar(Usuario usuario) throws Exception {
         try {
-            PreparedStatement stm = Conexao.get().getParamStm("UPDATE public.usuarios SET nome=?, email=?, sexo=?, idade=?, peso=?, altura=? WHERE id=?");
+            PreparedStatement stm = Conexao.get().getParamStm("UPDATE public.usuarios SET nome=?, email=?, sexo=?, idade=?, peso=?, altura=? WHERE id=?;");
 
             stm.setString(1, usuario.getNome());
             stm.setString(2, usuario.getEmail());
@@ -50,13 +51,39 @@ public class UsuarioDao {
 
     public void excluir(Long id) throws Exception {
         try {
-            PreparedStatement stm = Conexao.get().getParamStm("DELETE FROM public.usuarios WHERE id=?");
+            PreparedStatement stm = Conexao.get().getParamStm("DELETE FROM public.alimentos WHERE id=?;");
             stm.setLong(1, id);
             stm.execute();
         } catch (SQLException ex) {
             throw new Exception("Falha ao excluir o registro", ex);
         }
     }
+    
+    public Usuario buscar(Long id) throws Exception {
+        if (id == null) {
+            return null;
+        } else {
+            try {
+                PreparedStatement stm = Conexao.get().getParamStm("SELECT * FROM usuarios WHERE id = ?");
+                stm.setLong(1, id);
+                ResultSet rs = stm.executeQuery();
+                rs.next();
+                return lerRegistro(rs);
+            } catch (SQLException ex) {
+                throw new Exception("Erro ao buscar o registro", ex);
+            }
+        }
+    }
+
+    private Usuario lerRegistro(ResultSet rs) throws SQLException {
+        Usuario u = new Usuario();
+        u.setId(rs.getLong("id"));
+        u.setNome(rs.getString("nome"));
+        u.setEmail(rs.getString("email"));
+        u.setSexo(rs.getString("sexo"));
+        u.setIdade(rs.getInt("idade"));
+        u.setAltura(rs.getDouble("altura"));
+        u.setPeso(rs.getDouble("peso"));
+        return u;
+    }
 }
-
-

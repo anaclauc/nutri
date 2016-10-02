@@ -13,6 +13,18 @@ public class Usuario implements Parseable{
     private int idade;
     private double peso;
     private double altura;
+    
+    
+    @Override
+    public void parse(Map<String, String> values) {
+        this.id = Long.parseLong(values.get("id"));
+        this.nome = values.get("nome");
+        this.email = values.get("email");
+        this.altura = Integer.parseInt("altura");
+        this.idade =  Integer.parseInt("idade");
+        this.sexo = values.get("sexo");
+        this.peso = Double.parseDouble("peso");
+    }
 
     public String getEmail() {
         return email;
@@ -116,17 +128,7 @@ public class Usuario implements Parseable{
         return true;
     }
 
-    @Override
-    public void parse(Map<String, String> values) {
-        this.id = Long.parseLong(values.get("id"));
-        this.nome = values.get("nome");
-        this.email = values.get("email");
-        this.altura = Integer.parseInt("altura");
-        this.idade =  Integer.parseInt("idade");
-        this.sexo = values.get("sexo");
-        this.peso = Double.parseDouble("peso");
-    }
-
+    
     @Override
     public String toString() {
         return String.format("{\"id\":\"%s\", \"nome\":\"%s\", \"email\":\"%s\", \"idade\":\"%s\", \"altura\":\"%s\", \"peso\":\"%s\", \"sexo\":\"%s\" }", id, nome, email, idade, altura, peso, sexo);
@@ -149,7 +151,5 @@ public class Usuario implements Parseable{
         System.out.println("USUARIO: " + dao.atualizar(usuario).toString());
         
     }
-    
-    
-    
+       
 }
