@@ -1,0 +1,18 @@
+.brand {
+    width: 25px;
+    margin-top: -2px;
+}
+
+.col-codigo {
+    text-align: center;
+    width: 5%;
+}
+
+.col-actions {
+    text-align: center;
+    width: 6%;
+}
+
+.table-listagem {
+    margin-top: 20px;
+}
