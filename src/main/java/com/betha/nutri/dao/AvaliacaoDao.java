@@ -2,6 +2,7 @@ package com.betha.nutri.dao;
 
 import com.betha.nutri.model.Avaliacao;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class AvaliacaoDao {
@@ -57,4 +58,30 @@ public class AvaliacaoDao {
         }
     }
 
+    public Avaliacao buscar(Long id) throws Exception {
+        if (id == null) {
+            return null;
+        } else {
+            try {
+                PreparedStatement stm = Conexao.get().getParamStm("SELECT * FROM avaliacao WHERE id = ?");
+                stm.setLong(1, id);
+                ResultSet rs = stm.executeQuery();
+                rs.next();
+                return lerRegistro(rs);
+            } catch (SQLException ex) {
+                throw new Exception("Erro ao buscar o registro", ex);
+            }
+        }
+    }
+
+    private Avaliacao lerRegistro(ResultSet rs) throws SQLException {
+        Avaliacao a = new Avaliacao();
+        a.setId_usuario(rs.getLong("id_usuario"));
+        a.setId_dieta(rs.getLong("id_dieta"));
+        a.setData(rs.getDate("Data"));
+        a.setPeso_atual(rs.getDouble("peso_atual"));
+        a.setImc(rs.getDouble("imc"));
+        a.setTaxa_basal(rs.getDouble("taxa_basal"));
+        return a;
+    }
 }

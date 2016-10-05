@@ -2,6 +2,7 @@ package com.betha.nutri.dao;
 
 import com.betha.nutri.model.DietaAlimentos;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class DietaAlimentosDao {
@@ -49,6 +50,31 @@ public class DietaAlimentosDao {
         } catch (SQLException ex) {
             throw new Exception("Falha ao excluir o registro", ex);
         }
+    }
+
+    public DietaAlimentos buscar(Long id) throws Exception {
+        if (id == null) {
+            return null;
+        } else {
+            try {
+                PreparedStatement stm = Conexao.get().getParamStm("SELECT * FROM dieta_alimentos WHERE id = ?");
+                stm.setLong(1, id);
+                ResultSet rs = stm.executeQuery();
+                rs.next();
+                return lerRegistro(rs);
+            } catch (SQLException ex) {
+                throw new Exception("Erro ao buscar o registro", ex);
+            }
+        }
+    }
+
+    private DietaAlimentos lerRegistro(ResultSet rs) throws SQLException {
+        DietaAlimentos da = new DietaAlimentos();
+        da.setId_dieta(rs.getLong("id_dieta"));
+        da.setId_alimento(rs.getLong("id_alimento"));
+        da.setQuantidade(rs.getDouble("quantidade"));
+        da.setTipo(rs.getInt("tipo"));
+        return da;
     }
 
 }
