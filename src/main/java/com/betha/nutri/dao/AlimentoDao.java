@@ -2,7 +2,10 @@ package com.betha.nutri.dao;
 
 import com.betha.nutri.model.Alimento;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AlimentoDao {
 
@@ -46,4 +49,43 @@ public class AlimentoDao {
         }
     }
 
+    public List<Alimento> listarTodos() throws Exception {
+        List<Alimento> alimentos = new ArrayList<>();
+        
+        try {
+            PreparedStatement stm = Conexao.get().getParamStm("SELECT * FROM alimentos");
+            ResultSet rs = stm.executeQuery();
+            
+            while(rs.next()) {
+                alimentos.add(lerRegistro(rs));
+            }
+        } catch (SQLException ex) {
+            throw new Exception("Erro ao buscar o registro", ex);
+        }
+        
+        return alimentos;
+    }
+
+    public Alimento buscar(Long id) throws Exception {
+        if (id == null) {
+            return null;
+        } else {
+            try {
+                PreparedStatement stm = Conexao.get().getParamStm("SELECT * FROM alimentos WHERE id = ?");
+                stm.setLong(1, id);
+                ResultSet rs = stm.executeQuery();
+                rs.next();
+                return lerRegistro(rs);
+            } catch (SQLException ex) {
+                throw new Exception("Erro ao buscar o registro", ex);
+            }
+        }
+    }
+
+    private Alimento lerRegistro(ResultSet rs) throws SQLException {
+        Alimento a = new Alimento();
+        a.setId(rs.getLong("id"));
+        a.setDescricao(rs.getString("descrição"));
+        return a;
+    }
 }
