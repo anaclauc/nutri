@@ -4,6 +4,8 @@ import com.betha.nutri.model.Dieta;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DietaDao {
 
@@ -46,6 +48,23 @@ public class DietaDao {
         } catch (SQLException ex) {
             throw new Exception("Falha ao excluir o registro", ex);
         }
+    }
+
+    public List<Dieta> listarTodos() throws Exception {
+        List<Dieta> dieta = new ArrayList<>();
+
+        try {
+            PreparedStatement stm = Conexao.get().getParamStm("SELECT * FROM dietas");
+            ResultSet rs = stm.executeQuery();
+
+            while (rs.next()) {
+                dieta.add(lerRegistro(rs));
+            }
+        } catch (SQLException ex) {
+            throw new Exception("Erro ao buscar o registro", ex);
+        }
+
+        return dieta;
     }
 
     public Dieta buscar(Long id) throws Exception {

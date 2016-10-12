@@ -51,18 +51,18 @@ public class AlimentoDao {
 
     public List<Alimento> listarTodos() throws Exception {
         List<Alimento> alimentos = new ArrayList<>();
-        
+
         try {
             PreparedStatement stm = Conexao.get().getParamStm("SELECT * FROM alimentos");
             ResultSet rs = stm.executeQuery();
-            
-            while(rs.next()) {
+
+            while (rs.next()) {
                 alimentos.add(lerRegistro(rs));
             }
         } catch (SQLException ex) {
             throw new Exception("Erro ao buscar o registro", ex);
         }
-        
+
         return alimentos;
     }
 

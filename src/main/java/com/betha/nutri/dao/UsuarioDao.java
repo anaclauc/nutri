@@ -4,6 +4,8 @@ import com.betha.nutri.model.Usuario;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UsuarioDao {
 
@@ -58,7 +60,24 @@ public class UsuarioDao {
             throw new Exception("Falha ao excluir o registro", ex);
         }
     }
-    
+
+    public List<Usuario> listarTodos() throws Exception {
+        List<Usuario> usuario = new ArrayList<>();
+
+        try {
+            PreparedStatement stm = Conexao.get().getParamStm("SELECT * FROM usuario");
+            ResultSet rs = stm.executeQuery();
+
+            while (rs.next()) {
+                usuario.add(lerRegistro(rs));
+            }
+        } catch (SQLException ex) {
+            throw new Exception("Erro ao buscar o registro", ex);
+        }
+
+        return usuario;
+    }
+
     public Usuario buscar(Long id) throws Exception {
         if (id == null) {
             return null;
