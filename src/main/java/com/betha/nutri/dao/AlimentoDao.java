@@ -11,10 +11,9 @@ public class AlimentoDao {
 
     public Alimento inserir(Alimento alimento) throws Exception {
         try {
-            PreparedStatement paramStm = Conexao.get().getParamStm("INSERT INTO public.alimentos(id, descricao) VALUES (?, ?);");
+            PreparedStatement paramStm = Conexao.get().getParamStm("INSERT INTO public.alimentos(descricao) VALUES (?);");
             paramStm.setString(1, alimento.getDescricao());
-            // Recuperar o usuario com o ID
-
+            paramStm.execute();
             return alimento;
         } catch (SQLException ex) {
             throw new Exception("Falha ao inserir o registro", ex);
@@ -23,9 +22,10 @@ public class AlimentoDao {
 
     public Alimento atualizar(Alimento alimento) throws Exception {
         try {
-            PreparedStatement stm = Conexao.get().getParamStm("UPDATE public.alimentos SET id=?, descricao=? WHERE id=?;");
+            PreparedStatement stm = Conexao.get().getParamStm("UPDATE public.alimentos SET descricao=? WHERE id=?;");
 
             stm.setString(1, alimento.getDescricao());
+            stm.setLong(2, alimento.getId());
             stm.execute();
 
             return alimento;

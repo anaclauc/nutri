@@ -1,5 +1,6 @@
 package com.betha.nutri.model;
 
+import com.betha.nutri.utils.Utils;
 import java.util.Map;
 import java.util.Objects;
 
@@ -10,7 +11,11 @@ public class Alimento implements Parseable {
 
     @Override
     public void parse(Map<String, String> values) {
-        this.id = Long.parseLong(values.get("id"));
+        
+        if(Utils.isNotEmpty(values.get("id"))) {
+            this.id = Long.parseLong(values.get("id"));
+        }
+        
         this.descricao = values.get("descricao");
     }
 

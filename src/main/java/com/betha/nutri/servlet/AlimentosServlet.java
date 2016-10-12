@@ -2,6 +2,7 @@ package com.betha.nutri.servlet;
 
 import com.betha.nutri.dao.AlimentoDao;
 import com.betha.nutri.model.Alimento;
+import com.betha.nutri.utils.Utils;
 import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
@@ -16,34 +17,41 @@ import javax.servlet.http.HttpServletResponse;
 public class AlimentosServlet extends HttpServlet {
 
     private final AlimentoDao alimentoDao = new AlimentoDao();
-    
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
+            final String idAlimento = req.getParameter("id");
+
             resp.setContentType("application/json");
             resp.setCharacterEncoding("utf-8");
-            
-            final List<Alimento> alimentos = alimentoDao.listarTodos();
-            
-            if(alimentos != null && !alimentos.isEmpty()){
-                StringBuilder response = new StringBuilder();
-                response.append("[");
-            
-                for(Alimento alimento : alimentos){
-                    response.append(alimento.toString());
-                    response.append(",");
-                };
-                
-                response.replace(response.lastIndexOf(","), response.length(), "");
-                response.append("]");
-                resp.getWriter().write(response.toString());
+
+            if (Utils.isNotEmpty(idAlimento)) {
+                resp.getWriter().write(alimentoDao.buscar(Long.parseLong(idAlimento)).toString());
             } else {
-                resp.getWriter().write("[]");
+                ResponseBuilder builder = new ResponseBuilder();
+                resp.getWriter().write(builder.buildFromList(alimentoDao.listarTodos()));
             }
-            
         } catch (Exception ex) {
             Logger.getLogger(AlimentosServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        Alimento alimento = new Alimento();
+        alimento.parse(Utils.parseMap(req));
+
+        try {
+            if (Utils.isNotEmpty(req.getParameter("id"))) {
+                alimentoDao.atualizar(alimento);
+            } else {
+                alimentoDao.inserir(alimento);
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(AlimentosServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
 
 }
