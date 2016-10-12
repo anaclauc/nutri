@@ -55,7 +55,7 @@ public class Alimento implements Parseable {
 
     @Override
     public String toString() {
-        return String.format("{\"id\":\"%s\", \"descricao\":\"%s\",}", id, descricao);
+        return String.format("{\"id\":\"%s\", \"descricao\":\"%s\"}", id, descricao);
 
     }
 

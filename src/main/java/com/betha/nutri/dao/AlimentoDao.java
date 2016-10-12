@@ -85,7 +85,7 @@ public class AlimentoDao {
     private Alimento lerRegistro(ResultSet rs) throws SQLException {
         Alimento a = new Alimento();
         a.setId(rs.getLong("id"));
-        a.setDescricao(rs.getString("descrição"));
+        a.setDescricao(rs.getString("descricao"));
         return a;
     }
 }
