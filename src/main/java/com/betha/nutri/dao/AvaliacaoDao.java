@@ -4,6 +4,8 @@ import com.betha.nutri.model.Avaliacao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AvaliacaoDao {
 
@@ -56,6 +58,23 @@ public class AvaliacaoDao {
         } catch (SQLException ex) {
             throw new Exception("Falha ao excluir o registro", ex);
         }
+    }
+
+    public List<Avaliacao> listarTodos() throws Exception {
+        List<Avaliacao> avaliacao = new ArrayList<>();
+
+        try {
+            PreparedStatement stm = Conexao.get().getParamStm("SELECT * FROM avaliacao");
+            ResultSet rs = stm.executeQuery();
+
+            while (rs.next()) {
+                avaliacao.add(lerRegistro(rs));
+            }
+        } catch (SQLException ex) {
+            throw new Exception("Erro ao buscar o registro", ex);
+        }
+
+        return avaliacao;
     }
 
     public Avaliacao buscar(Long id) throws Exception {
