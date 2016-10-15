@@ -47,6 +47,8 @@ public class AlimentoServlet extends HttpServlet {
             } else {
                 alimentoDao.inserir(alimento);
             }
+            
+            resp.getWriter().write(alimento.toString());
         } catch (Exception ex) {
             Logger.getLogger(AlimentoServlet.class.getName()).log(Level.SEVERE, null, ex);
         }

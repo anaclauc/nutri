@@ -11,9 +11,16 @@ public class AlimentoDao {
 
     public Alimento inserir(Alimento alimento) throws Exception {
         try {
-            PreparedStatement paramStm = Conexao.get().getParamStm("INSERT INTO public.alimentos(descricao) VALUES (?);");
+            PreparedStatement paramStm = Conexao.get().getParamStm("INSERT INTO public.alimentos(descricao) VALUES (?) RETURNING id;");
             paramStm.setString(1, alimento.getDescricao());
-            paramStm.execute();
+            ResultSet rs = paramStm.executeQuery();
+            
+            if(rs != null) {
+                rs.next();
+                Long id = rs.getLong("id");
+                alimento.setId(id);
+            }
+            
             return alimento;
         } catch (SQLException ex) {
             throw new Exception("Falha ao inserir o registro", ex);

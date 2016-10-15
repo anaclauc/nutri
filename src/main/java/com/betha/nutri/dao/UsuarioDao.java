@@ -11,16 +11,21 @@ public class UsuarioDao {
 
     public Usuario inserir(Usuario usuario) throws Exception {
         try {
-            PreparedStatement paramStm = Conexao.get().getParamStm("INSERT INTO public.usuarios(nome, email, sexo, idade, peso, altura) VALUES (?, ?, ?, ?, ?, ?);");
+            PreparedStatement paramStm = Conexao.get().getParamStm("INSERT INTO public.usuarios(nome, email, sexo, idade, peso, altura) VALUES (?, ?, ?, ?, ?, ?) RETURNING id;");
             paramStm.setString(1, usuario.getNome());
             paramStm.setString(2, usuario.getEmail());
             paramStm.setString(3, usuario.getSexo());
             paramStm.setInt(4, usuario.getIdade());
             paramStm.setDouble(5, usuario.getPeso());
             paramStm.setDouble(6, usuario.getAltura());
-            paramStm.execute();
+            ResultSet rs = paramStm.executeQuery();
 
-            // Recuperar o usuario com o ID
+            if(rs != null) {
+                rs.next();
+                long id = rs.getLong("id");
+                usuario.setId(id);
+            }
+            
             return usuario;
         } catch (SQLException ex) {
             throw new Exception("Falha ao inserir o registro", ex);
@@ -53,7 +58,7 @@ public class UsuarioDao {
 
     public void excluir(Long id) throws Exception {
         try {
-            PreparedStatement stm = Conexao.get().getParamStm("DELETE FROM public.alimentos WHERE id=?;");
+            PreparedStatement stm = Conexao.get().getParamStm("DELETE FROM usuarios WHERE id=?;");
             stm.setLong(1, id);
             stm.execute();
         } catch (SQLException ex) {
@@ -62,36 +67,38 @@ public class UsuarioDao {
     }
 
     public List<Usuario> listarTodos() throws Exception {
-        List<Usuario> usuario = new ArrayList<>();
+        List<Usuario> usuarios = new ArrayList<>();
 
         try {
-            PreparedStatement stm = Conexao.get().getParamStm("SELECT * FROM usuario");
+            PreparedStatement stm = Conexao.get().getParamStm("SELECT * FROM usuarios");
             ResultSet rs = stm.executeQuery();
 
             while (rs.next()) {
-                usuario.add(lerRegistro(rs));
+                usuarios.add(lerRegistro(rs));
             }
         } catch (SQLException ex) {
             throw new Exception("Erro ao buscar o registro", ex);
         }
 
-        return usuario;
+        return usuarios;
     }
 
     public Usuario buscar(Long id) throws Exception {
-        if (id == null) {
-            return null;
-        } else {
+        if (id != null) {
             try {
                 PreparedStatement stm = Conexao.get().getParamStm("SELECT * FROM usuarios WHERE id = ?");
                 stm.setLong(1, id);
                 ResultSet rs = stm.executeQuery();
-                rs.next();
-                return lerRegistro(rs);
+                
+                if (rs.next()){
+                  return lerRegistro(rs);
+                } 
             } catch (SQLException ex) {
                 throw new Exception("Erro ao buscar o registro", ex);
             }
         }
+        
+        return null;
     }
 
     private Usuario lerRegistro(ResultSet rs) throws SQLException {

@@ -16,6 +16,14 @@ public final class Utils {
         return isEmpty(value) ? null : Long.parseLong(value);
     }
     
+    public static final Double parseDouble(String value) {
+        return isEmpty(value) ? null : Double.parseDouble(value);
+    }
+    
+    public static final Integer parseInt(String value) {
+        return isEmpty(value) ? null : Integer.parseInt(value);
+    }
+    
     public static final boolean isEmpty(String value) {
         return value == null || value.trim().isEmpty();
     }
@@ -29,7 +37,12 @@ public final class Utils {
         Enumeration<String> params = req.getParameterNames();
         while (params.hasMoreElements()) {
             String key = params.nextElement();
-            dados.put(key, req.getParameter(key));
+            String value = req.getParameter(key);
+            System.out.println("VALOR: " + key + ": " + value);
+            
+            if(value != null) {
+                dados.put(key, value);
+            }
         }
         return dados;
     }

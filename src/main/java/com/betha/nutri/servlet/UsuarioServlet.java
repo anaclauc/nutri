@@ -26,7 +26,13 @@ public class UsuarioServlet extends HttpServlet {
             resp.setCharacterEncoding("utf-8");
 
             if (Utils.isNotEmpty(idUsuario)) {
-                resp.getWriter().write(usuarioDao.buscar(Long.parseLong(idUsuario)).toString());
+                final Usuario usuario = usuarioDao.buscar(Long.parseLong(idUsuario));
+                
+                if(usuario != null) {
+                    resp.getWriter().write(usuario.toString());
+                } else {
+                    resp.setStatus(404);
+                }
             } else {
                 ResponseBuilder builder = new ResponseBuilder();
                 resp.getWriter().write(builder.buildFromList(usuarioDao.listarTodos()));
@@ -48,6 +54,8 @@ public class UsuarioServlet extends HttpServlet {
             } else {
                 usuarioDao.inserir(usuario);
             }
+            
+            resp.getWriter().write(usuario.toString());
         } catch (Exception ex) {
             Logger.getLogger(UsuarioServlet.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -2,6 +2,7 @@
 package com.betha.nutri.model;
 
 import com.betha.nutri.dao.UsuarioDao;
+import com.betha.nutri.utils.Utils;
 import java.util.Map;
 import java.util.Objects;
 
@@ -17,13 +18,13 @@ public class Usuario implements Parseable{
     
     @Override
     public void parse(Map<String, String> values) {
-        this.id = Long.parseLong(values.get("id"));
+        this.id = Utils.parseLong(values.get("id"));
         this.nome = values.get("nome");
         this.email = values.get("email");
-        this.altura = Integer.parseInt("altura");
-        this.idade =  Integer.parseInt("idade");
+        this.altura = Utils.parseDouble(values.get("altura"));
+        this.idade =  Utils.parseInt(values.get("idade"));
         this.sexo = values.get("sexo");
-        this.peso = Double.parseDouble("peso");
+        this.peso = Utils.parseDouble(values.get("peso"));
     }
 
     public String getEmail() {
