@@ -4,7 +4,6 @@ import com.betha.nutri.dao.AlimentoDao;
 import com.betha.nutri.model.Alimento;
 import com.betha.nutri.utils.Utils;
 import java.io.IOException;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -51,7 +50,19 @@ public class AlimentosServlet extends HttpServlet {
         } catch (Exception ex) {
             Logger.getLogger(AlimentosServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        if (req.getParameter("id") == null) {
+            resp.sendError(406, "Propriedade ID obrigatória");
+        } else { // realizar o delete
+            try {
+                alimentoDao.excluir(Utils.parseLong(req.getParameter("id")));
+            } catch (Exception ex) {
+                Logger.getLogger(AlimentosServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
 }

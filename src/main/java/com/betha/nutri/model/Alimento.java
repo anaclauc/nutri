@@ -11,11 +11,7 @@ public class Alimento implements Parseable {
 
     @Override
     public void parse(Map<String, String> values) {
-        
-        if(Utils.isNotEmpty(values.get("id"))) {
-            this.id = Long.parseLong(values.get("id"));
-        }
-        
+        this.id = Utils.parseLong(values.get("id"));
         this.descricao = values.get("descricao");
     }
 
