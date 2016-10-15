@@ -12,8 +12,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/api/alimentos")
-public class AlimentosServlet extends HttpServlet {
+@WebServlet("/api/alimento")
+public class AlimentoServlet extends HttpServlet {
 
     private final AlimentoDao alimentoDao = new AlimentoDao();
 
@@ -32,7 +32,7 @@ public class AlimentosServlet extends HttpServlet {
                 resp.getWriter().write(builder.buildFromList(alimentoDao.listarTodos()));
             }
         } catch (Exception ex) {
-            Logger.getLogger(AlimentosServlet.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AlimentoServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -48,7 +48,7 @@ public class AlimentosServlet extends HttpServlet {
                 alimentoDao.inserir(alimento);
             }
         } catch (Exception ex) {
-            Logger.getLogger(AlimentosServlet.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AlimentoServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -60,7 +60,7 @@ public class AlimentosServlet extends HttpServlet {
             try {
                 alimentoDao.excluir(Utils.parseLong(req.getParameter("id")));
             } catch (Exception ex) {
-                Logger.getLogger(AlimentosServlet.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(AlimentoServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
