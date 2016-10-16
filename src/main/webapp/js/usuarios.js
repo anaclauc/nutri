@@ -3,6 +3,7 @@ var modelList = [
     { id: 2, nome: 'Ana Claudia Casagrande Patricio', email: 'anaclaudiacpatricio@gmail.com', sexo: 'F', idade: 26, peso: 62, altura: 1.67}
 ]
 
+var endpoint = 'http://localhost:8080/nutri-1.0-SNAPSHOT/api/usuario';
 var model;
 var modelTable = $('#modelTable');
 var modal = $("#modal");
@@ -21,12 +22,6 @@ function Usuario(id, nome, email, sexo, idade, peso, altura) {
 
 function Controller() {
     
-    function findById(id) {
-        return modelList.find(function(data){
-            return data.id == id;
-        });
-    }
-
     function renderRow(data) {
         return "<tr id='model-" + data.id + "'>" +
                 "<td class='col-codigo'>" + data.id + "</td>" +
@@ -50,9 +45,10 @@ function Controller() {
     }
 
     function carregar() {
-        // TODO: Carregar do servidor
-        modelList.forEach(function(data){
-            appendRow(data);
+        $.get(endpoint, function(data) {
+            data.forEach(function(usuario){
+                appendRow(usuario);
+            });            
         });
     }
 
@@ -63,16 +59,23 @@ function Controller() {
 
     function editar(element) {
         id = $(element).attr('model-id');
-        // TODO: Deve carregar do servidor
-        model = findById(id);
-        modal.modal('show');
+        
+        $.get(endpoint + '?id=' + id, function(data) {
+            model = data;
+            modal.modal('show');
+        });
     }
 
     function excluir(element) {
         if (confirm('Tem certeza que deseja excluir o registro?')) {
             id = $(element).attr('model-id');
-            // TODO: Deve enviar a requisição para o servidor
-            $('#model-' + id).remove();
+
+             $.ajax({
+                url: endpoint + '?id=' + id,
+                method: 'DELETE'
+            }).done(function(data) {
+                $('#model-' + id).remove();
+            });
         }
     }
 
@@ -89,16 +92,23 @@ function Controller() {
     function salvar() {
         data = $('#form').serializeObject();
 
-        if (data.id) {
-            // Deve atualizar no servidor
-            replaceRow(data);
-        } else {
-            // Deve inserir no servidor
-            modelList.push(data);
-            appendRow(data);
-        }
-  
-        modal.modal('hide');
+        $.ajax({
+            url: endpoint,
+            method: 'POST',
+            data: data,
+            success: function(response) {
+                response = $.parseJSON(response);
+
+                if(data.id) {
+                    replaceRow(response);
+                } else {
+                    appendRow(response);
+                }
+
+                modal.modal('hide');
+            }
+        });
+
     }
 
     return {

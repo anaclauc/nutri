@@ -48,7 +48,7 @@ public class AlimentoDao {
 
     public void excluir(Long id) throws Exception {
         try {
-            PreparedStatement stm = Conexao.get().getParamStm("DELETE FROM public.usuarios WHERE id=?;");
+            PreparedStatement stm = Conexao.get().getParamStm("DELETE FROM alimentos WHERE id=?;");
             stm.setLong(1, id);
             stm.execute();
         } catch (SQLException ex) {
