@@ -1,5 +1,6 @@
 package com.betha.nutri.model;
 
+import com.betha.nutri.utils.Utils;
 import java.util.Map;
 import java.util.Objects;
 
@@ -11,7 +12,7 @@ public class Dieta implements Parseable {
 
     @Override
     public void parse(Map<String, String> values) {
-        this.id = Long.parseLong(values.get("id"));
+        this.id = Utils.parseLong(values.get("id"));
         this.nome = values.get("nome");
         this.descricao = values.get("descricao");
     }

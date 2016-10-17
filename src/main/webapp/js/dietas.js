@@ -1,16 +1,10 @@
-
-var modelList = [
-    { id: 1, nome: 'Perda de gordura Matheus'},
-    { id: 2, nome: 'Ganho de massa Ana Claudia'}
-]
+var endpoint = 'http://localhost:8080/nutri-1.0-SNAPSHOT/api/dieta';
 
 var model;
 var modelTable = $('#modelTable');
 var modal = $("#modal");
 var btnSalvar = $('#btnSalvar');
 var btnNovo = $('#btnNovo');
-var btnIncluirAlimento = $('#btnIncluirAlimento');
-var alimentosTable = $('#alimentosTable')
 
 function Dieta(id, nome, descricao) {
     this.id = id;
@@ -25,27 +19,7 @@ function Controller() {
             return data.id == id;
         });
     }
-
-    function renderAlimentoRow(index) {
-        return "<tr>" +
-                    "<td>" +
-                        "<select class='form-control' name='alimento[" + index + "].id'>" +
-                            "<option>Selecione...</option>" +
-                        "</select>" +
-                    "</td>" +
-                    "<td>" +
-                        "<input type='text' name='alimento[" + index + "].qtde' class='form-control' placeholder='Quantidade' />" +
-                    "</td>" +
-                    "<td>" +
-                        "<select class='form-control' name='alimento[" + index + "].tipo'>" +
-                            "<option>Selecione...</option>" + 
-                            "<option value='0'>Unidades</option>" +
-                            "<option value='1'>Gramas</option>" + 
-                        "</select>" +
-                    "</td>" +
-                "</tr>";
-    }
-
+  
     function renderRow(data) {
         return "<tr id='model-" + data.id + "'>" +
                 "<td class='col-codigo'>" + data.id + "</td>" +
@@ -69,12 +43,13 @@ function Controller() {
     }
 
     function carregar() {
-        // TODO: Carregar do servidor
-        modelList.forEach(function(data){
-            appendRow(data);
+        $.get(endpoint, function(data) {
+            data.forEach(function(alimento){
+                appendRow(alimento);
+            });            
         });
     }
-
+    
     function novo() {
         model = new Dieta();
         modal.modal('show');
@@ -82,16 +57,24 @@ function Controller() {
 
     function editar(element) {
         id = $(element).attr('model-id');
-        // TODO: Deve carregar do servidor
-        model = findById(id);
-        modal.modal('show');
+        
+        $.get(endpoint + '?id=' + id, function(data) {
+            model = data;
+            modal.modal('show');
+        });
     }
 
     function excluir(element) {
         if (confirm('Tem certeza que deseja excluir o registro?')) {
             id = $(element).attr('model-id');
-            // TODO: Deve enviar a requisição para o servidor
-            $('#model-' + id).remove();
+            
+            $.ajax({
+                url: endpoint + '?id=' + id,
+                method: 'DELETE'
+            }).done(function(data) {
+                $('#model-' + id).remove();
+            });
+            
         }
     }
 
@@ -104,16 +87,23 @@ function Controller() {
     function salvar() {
         data = $('#form').serializeObject();
 
-        if (data.id) {
-            // Deve atualizar no servidor
-            replaceRow(data);
-        } else {
-            // Deve inserir no servidor
-            modelList.push(data);
-            appendRow(data);
-        }
-  
-        modal.modal('hide');
+        $.ajax({
+            url: endpoint,
+            method: 'POST',
+            data: data,
+            success: function(response) {
+                response = $.parseJSON(response);
+
+                if(data.id) {
+                    replaceRow(response);
+                } else {
+                    appendRow(response);
+                }
+
+                modal.modal('hide');
+            }
+        });
+
     }
 
     return {
@@ -123,7 +113,6 @@ function Controller() {
         editar: editar,
         excluir: excluir,
         preencherForm: preencherForm,
-        renderAlimentoRow: renderAlimentoRow
     }
 }
 
@@ -137,13 +126,9 @@ btnNovo.click(function(){
     controller.novo();
 });
 
-btnIncluirAlimento.click(function(){
-    index = alimentosTable.children().length;
-    alimentosTable.append(controller.renderAlimentoRow(index));
-});
-
 modal.on('show.bs.modal', function(e){
-    controller.preencherForm(model);
+    controller.preencherForm(model); 
+    
 });
 
 controller.carregar();

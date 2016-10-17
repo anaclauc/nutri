@@ -11,11 +11,16 @@ public class DietaDao {
 
     public Dieta inserir(Dieta dieta) throws Exception {
         try {
-            PreparedStatement paramStm = Conexao.get().getParamStm("INSERT INTO public.dietas(id, descricao, nome)VALUES (?, ?, ?);");
+            PreparedStatement paramStm = Conexao.get().getParamStm("INSERT INTO public.dietas(descricao, nome)VALUES (?, ?) RETURNING id;");
             paramStm.setString(1, dieta.getNome());
             paramStm.setString(2, dieta.getDescricao());
-            paramStm.execute();
+            ResultSet rs = paramStm.executeQuery();
 
+            if(rs != null) {
+                rs.next();
+                dieta.setId(rs.getLong("id"));
+            }
+            
             return dieta;
         } catch (SQLException ex) {
             throw new Exception("Falha ao inserir o registro", ex);
@@ -24,10 +29,11 @@ public class DietaDao {
 
     public Dieta atualizar(Dieta dieta) throws Exception {
         try {
-            PreparedStatement stm = Conexao.get().getParamStm("UPDATE public.dietas  SET id=?, descricao=?, nome=? WHERE id=?;");
+            PreparedStatement stm = Conexao.get().getParamStm("UPDATE public.dietas  SET nome=?, descricao=? WHERE id=?;");
 
             stm.setString(1, dieta.getNome());
             stm.setString(2, dieta.getDescricao());
+            stm.setLong(3, dieta.getId());
             stm.execute();
 
             return dieta;
@@ -85,8 +91,9 @@ public class DietaDao {
 
     private Dieta lerRegistro(ResultSet rs) throws SQLException {
         Dieta d = new Dieta();
+        d.setId(rs.getLong("id"));
         d.setNome(rs.getString("nome"));
-        d.setDescricao(rs.getString("descrição"));
+        d.setDescricao(rs.getString("descricao"));
         return d;
     }
 
