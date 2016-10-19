@@ -11,9 +11,9 @@ public class Usuario implements Parseable{
     private String nome;
     private String email;
     private String sexo;
-    private int idade;
-    private double peso;
-    private double altura;
+    private Integer idade;
+    private Double peso;
+    private Double altura;
     
     
     @Override
@@ -59,27 +59,27 @@ public class Usuario implements Parseable{
         this.sexo = sexo;
     }
 
-    public int getIdade() {
+    public Integer getIdade() {
         return idade;
     }
 
-    public void setIdade(int idade) {
+    public void setIdade(Integer idade) {
         this.idade = idade;
     }
 
-    public double getPeso() {
+    public Double getPeso() {
         return peso;
     }
 
-    public void setPeso(double peso) {
+    public void setPeso(Double peso) {
         this.peso = peso;
     }
 
-    public double getAltura() {
+    public Double getAltura() {
         return altura;
     }
 
-    public void setAltura(double altura) {
+    public void setAltura(Double altura) {
         this.altura = altura;
     }
 
@@ -117,7 +117,7 @@ public class Usuario implements Parseable{
         if (!Objects.equals(this.sexo, other.sexo)) {
             return false;
         }
-        if (this.idade != other.idade) {
+        if (!Objects.equals(this.idade, other.idade)) {
             return false;
         }
         if (Double.doubleToLongBits(this.peso) != Double.doubleToLongBits(other.peso)) {
@@ -142,7 +142,7 @@ public class Usuario implements Parseable{
         usuario.setNome("Ana Claudia");
         usuario.setEmail("anclaudiccpatricio2@gmail.com");
         usuario.setAltura(1.67);
-        usuario.setPeso(57);
+        usuario.setPeso(57d);
         usuario.setIdade(26);
         usuario.setSexo("F");
         

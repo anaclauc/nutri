@@ -1,9 +1,11 @@
 package com.betha.nutri.servlet;
 
 import com.betha.nutri.dao.UsuarioDao;
+import com.betha.nutri.model.Erro;
 import com.betha.nutri.model.Usuario;
 import com.betha.nutri.utils.Utils;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -56,8 +58,13 @@ public class UsuarioServlet extends HttpServlet {
             }
             
             resp.getWriter().write(usuario.toString());
-        } catch (Exception ex) {
+        } catch (IllegalArgumentException ex) {
+            resp.setStatus(400);
+            resp.getWriter().write(new Erro(ex.getMessage()).toString());
+        } catch (SQLException ex) {
             Logger.getLogger(UsuarioServlet.class.getName()).log(Level.SEVERE, null, ex);
+            resp.setStatus(500);
+            resp.getWriter().write(new Erro("Erro interno ao salvar o registro").toString());
         }
     }
 

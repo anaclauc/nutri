@@ -81,9 +81,13 @@ function Controller() {
             url: endpoint,
             method: 'POST',
             data: data,
+            error: function(response) {
+                response = $.parseJSON(response.responseText);
+                $("#error-container").html(response.mensagem).show();
+            },
             success: function(response) {
                 response = $.parseJSON(response);
-
+                
                 if(data.id) {
                     replaceRow(response);
                 } else {
@@ -116,6 +120,8 @@ btnNovo.click(function(){
 });
 
 modal.on('show.bs.modal', function(e){
+    $('#error-container').hide();
+    $('#input-descricao').focus();
     controller.preencherForm(model);
 });
 

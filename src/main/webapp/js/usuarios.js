@@ -96,6 +96,11 @@ function Controller() {
             url: endpoint,
             method: 'POST',
             data: data,
+            error: function(response) {
+                console.log(response);
+                response = $.parseJSON(response.responseText);
+                $("#error-container").html(response.mensagem).show();
+            },
             success: function(response) {
                 response = $.parseJSON(response);
 
@@ -132,6 +137,7 @@ btnNovo.click(function(){
 });
 
 modal.on('show.bs.modal', function(e){
+    $('#error-container').hide();
     controller.preencherForm(model);
 });
 

@@ -1,6 +1,7 @@
 package com.betha.nutri.dao;
 
 import com.betha.nutri.model.Alimento;
+import com.betha.nutri.utils.Utils;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,37 +10,36 @@ import java.util.List;
 
 public class AlimentoDao {
 
-    public Alimento inserir(Alimento alimento) throws Exception {
-        try {
-            PreparedStatement paramStm = Conexao.get().getParamStm("INSERT INTO public.alimentos(descricao) VALUES (?) RETURNING id;");
-            paramStm.setString(1, alimento.getDescricao());
-            ResultSet rs = paramStm.executeQuery();
-            
-            if(rs != null) {
-                rs.next();
-                Long id = rs.getLong("id");
-                alimento.setId(id);
-            }
-            
-            return alimento;
-        } catch (SQLException ex) {
-            throw new Exception("Falha ao inserir o registro", ex);
+    private void validar(Alimento alimento) {
+        if (Utils.isEmpty(alimento.getDescricao())) {
+            throw new IllegalArgumentException("A descricao do alimento nao pode ser nula");
         }
     }
 
-    public Alimento atualizar(Alimento alimento) throws Exception {
-        try {
-            PreparedStatement stm = Conexao.get().getParamStm("UPDATE public.alimentos SET descricao=? WHERE id=?;");
+    public Alimento inserir(Alimento alimento) throws IllegalArgumentException, SQLException {
+        validar(alimento);
+        PreparedStatement paramStm = Conexao.get().getParamStm("INSERT INTO public.alimentos(descricao) VALUES (?) RETURNING id;");
+        paramStm.setString(1, alimento.getDescricao());
+        ResultSet rs = paramStm.executeQuery();
 
-            stm.setString(1, alimento.getDescricao());
-            stm.setLong(2, alimento.getId());
-            stm.execute();
-
-            return alimento;
-        } catch (SQLException ex) {
-            throw new Exception("Falha ao alterar o registro", ex);
+        if (rs != null) {
+            rs.next();
+            Long id = rs.getLong("id");
+            alimento.setId(id);
         }
 
+        return alimento;
+    }
+
+    public Alimento atualizar(Alimento alimento) throws IllegalArgumentException, SQLException {
+        validar(alimento);
+        PreparedStatement stm = Conexao.get().getParamStm("UPDATE public.alimentos SET descricao=? WHERE id=?;");
+
+        stm.setString(1, alimento.getDescricao());
+        stm.setLong(2, alimento.getId());
+        stm.execute();
+
+        return alimento;
     }
 
     public void excluir(Alimento alimento) throws Exception {
