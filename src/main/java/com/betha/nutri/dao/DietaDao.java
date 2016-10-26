@@ -10,9 +10,9 @@ import java.util.List;
 
 public class DietaDao {
 
-    private void validar(Dieta dieta) {
+    public void validar(Dieta dieta) {
         if (Utils.isEmpty(dieta.getNome())) {
-            throw new IllegalArgumentException("O nome da dieta nao pode ser nula");
+            throw new IllegalArgumentException("O nome da dieta nao pode ser nulo");
         }
     }
 

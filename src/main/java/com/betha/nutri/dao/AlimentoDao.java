@@ -10,7 +10,7 @@ import java.util.List;
 
 public class AlimentoDao {
 
-    private void validar(Alimento alimento) {
+    public void validar(Alimento alimento) {
         if (Utils.isEmpty(alimento.getDescricao())) {
             throw new IllegalArgumentException("A descricao do alimento nao pode ser nula");
         }

@@ -74,7 +74,11 @@ function Controller() {
     function preencherForm(model) {
         $('input[name=id]').val(model.id);
         $('input[name=nome]').val(model.nome);
-        $('textarea[name=descricao]').val(model.descricao);
+        
+        if(model.descricao) {
+            $('#descricao')[0].innerHTML = model.descricao;
+        }
+        
     }
 
     function salvar() {

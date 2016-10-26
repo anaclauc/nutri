@@ -10,7 +10,7 @@ import java.util.List;
 
 public class UsuarioDao {
 
-    private void validar(Usuario usuario) {
+    public void validar(Usuario usuario) {
         if (Utils.isEmpty(usuario.getNome())) {
             throw new IllegalArgumentException("O nome do usuario nao pode ser nulo");
         } else if (Utils.isEmpty(usuario.getEmail())) {
@@ -23,9 +23,10 @@ public class UsuarioDao {
             throw new IllegalArgumentException("A altura deve ser superior a 0");
         } else {
             try {
-            if (buscar(usuario.getEmail()) != null) {
-                throw new IllegalArgumentException("O email informado ja esta em uso");
-            }
+                if (buscar(usuario) != null) {
+                    throw new IllegalArgumentException("O email informado ja esta em uso");
+                }
+
             } catch (SQLException ex) {
                 throw new IllegalArgumentException("Nao foi possivel validar o email informado");
             }
@@ -117,9 +118,11 @@ public class UsuarioDao {
         return null;
     }
 
-    public Usuario buscar(String email) throws IllegalArgumentException, SQLException {
-        PreparedStatement stm = Conexao.get().getParamStm("SELECT * FROM usuarios WHERE email = ?");
-        stm.setString(1, email);
+    
+    public Usuario buscar(Usuario usuario) throws IllegalArgumentException, SQLException {
+        PreparedStatement stm = Conexao.get().getParamStm("SELECT * FROM usuarios WHERE id != ? AND email = ?");
+        stm.setLong(1, usuario.getId());
+        stm.setString(2, usuario.getEmail());
         ResultSet rs = stm.executeQuery();
 
         if (rs.next()) {
