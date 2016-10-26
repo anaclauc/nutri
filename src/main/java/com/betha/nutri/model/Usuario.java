@@ -134,23 +134,5 @@ public class Usuario implements Parseable{
     public String toString() {
         return String.format("{\"id\":\"%s\", \"nome\":\"%s\", \"email\":\"%s\", \"idade\":\"%s\", \"altura\":\"%s\", \"peso\":\"%s\", \"sexo\":\"%s\" }", id, nome, email, idade, altura, peso, sexo);
     }
-    
-    public static void main(String[] args) throws Exception {
-        
-        Usuario usuario = new Usuario();
-        usuario.setId(1L);
-        usuario.setNome("Ana Claudia");
-        usuario.setEmail("anclaudiccpatricio2@gmail.com");
-        usuario.setAltura(1.67);
-        usuario.setPeso(57d);
-        usuario.setIdade(26);
-        usuario.setSexo("F");
-        
-        UsuarioDao dao = new UsuarioDao();
-        dao.excluir(4L);
-        
-        System.out.println("USUARIO: " + dao.atualizar(usuario).toString());
-        
-    }
        
 }
