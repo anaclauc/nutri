@@ -3,8 +3,10 @@ package com.betha.nutri.servlet;
 
 import com.betha.nutri.dao.DietaDao;
 import com.betha.nutri.model.Dieta;
+import com.betha.nutri.model.Erro;
 import com.betha.nutri.utils.Utils;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -50,8 +52,12 @@ public class DietaServlet extends HttpServlet {
             }
             
             resp.getWriter().write(dieta.toString());
-        } catch (Exception ex) {
-            Logger.getLogger(AlimentoServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalArgumentException ex) {
+            resp.setStatus(400);
+            resp.getWriter().write(new Erro(ex.getMessage()).toString());
+        } catch (SQLException ex) {
+            resp.setStatus(500);
+            resp.getWriter().write(new Erro("Erro interno ao salvar o registro").toString());
         }
     }
     

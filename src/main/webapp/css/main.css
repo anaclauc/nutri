@@ -16,3 +16,8 @@
 .table-listagem {
     margin-top: 20px;
 }
+
+.content-editable {
+    display: inline-block;
+    min-height: 100px;
+}
