@@ -1,6 +1,7 @@
 package com.betha.nutri.model;
 
 import com.betha.nutri.dao.UsuarioDao;
+import com.betha.nutri.utils.Utils;
 import java.sql.Date;
 import java.util.Map;
 import java.util.Objects;
@@ -17,13 +18,13 @@ public class Avaliacao implements Parseable {
 
     @Override
     public void parse(Map<String, String> values) {
-        this.id = Long.parseLong(values.get("id"));
-        this.id_usuario = Long.parseLong(values.get("id_usuario"));
-        this.id_dieta = Long.parseLong(values.get("id_dieta"));
-        this.data = Date.valueOf("data");
-        this.peso_atual = Double.parseDouble("peso_atual");
-        this.taxa_basal = Double.parseDouble("taxa_basal");
-        this.imc = Double.parseDouble("imc");
+        this.id = Utils.parseLong(values.get("id"));
+        this.id_usuario = Utils.parseLong(values.get("id_usuario"));
+        this.id_dieta = Utils.parseLong(values.get("id_dieta"));
+        this.data = Date.valueOf(values.get("data"));
+        this.peso_atual = Utils.parseDouble(values.get("peso_atual"));
+        this.taxa_basal = Utils.parseDouble(values.get("taxa_basal"));
+        this.imc = Utils.parseDouble(values.get("imc"));
     }
 
     public Long getId() {

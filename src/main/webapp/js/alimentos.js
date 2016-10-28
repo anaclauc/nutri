@@ -121,7 +121,7 @@ btnNovo.click(function(){
 
 modal.on('show.bs.modal', function(e){
     $('#error-container').hide();
-    $('#input-descricao').focus();
+    $('#descricao').focus();
     controller.preencherForm(model);
 });
 

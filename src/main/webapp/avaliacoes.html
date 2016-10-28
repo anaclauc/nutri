@@ -14,20 +14,20 @@
         <div id="body" class="container">
             
             <div class="page-header">
-                <h1>Alimentos</h1> 
+                <h1>Avaliações</h1> 
             </div>
 
             <ol class="breadcrumb">
                 <li><a href="index.html">Visão geral</a></li>
-                <li><a href="#">Cadastros</a></li>
-                <li class="active">Alimentos</li>
+                <li><a href="#">Processos</a></li>
+                <li class="active">Avaliações</li>
             </ol>
 
 
             <div class="row col-lg-2">
                 <button id="btnNovo" class="btn btn-success">
                     <span class="glyphicon glyphicon-plus"></span>
-                    Alimento
+                    Avaliação
                 </button>
             </div>
 
@@ -37,15 +37,36 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Fechar"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" id="modalCadastroTitulo">Alimento</h4>
+                            <h4 class="modal-title" id="modalCadastroTitulo">Avaliação</h4>
                         </div>
                         <div class="modal-body">
                             <div id="error-container" class="alert alert-danger" role="alert" style="display:none"></div>
                             <form id="form">
+                                
                                 <div class="form-group">
-                                    <label for="descricao">Nome</label>
-                                    <input id="input-descricao" type="text" name="descricao" class="form-control" placeholder="Nome" />
+                                    <label for="id_usuario">Paciente</label>
+                                    <select id="input-usuario" class="form-control" name="id_usuario">
+                                        <option value="">Selecione um usuario</option>
+                                    </select>
                                 </div>
+                                
+                                <div class="form-group">
+                                    <label for="id_dieta">Dieta</label>
+                                    <select id="input-dieta" class="form-control" name="id_dieta">
+                                        <option value="">Selecione uma dieta</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="peso">Peso atual</label>
+                                    <input id="peso" type="text" name="peso" class="form-control" placeholder="Peso atual" />
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="data">Data</label>
+                                    <input id="data" type="text" name="data" class="form-control" placeholder="Data" />
+                                </div>
+                                
                                 <input type="hidden" name="id" />
                             </form>
                         </div>
@@ -64,7 +85,10 @@
                 <thead>
                     <tr>
                         <th class="col-codigo">Código</th>
-                        <th>Nome</th>
+                        <th>Paciente</th>
+                        <th>Peso</th>
+                        <th>Data avaliação</th>
+                        <th>Dieta</th>
                         <th class="col-actions">Ações</th>
                     </tr>
                 </thead>
@@ -84,7 +108,7 @@
           window.jQuery || document.write('<script src="assets/js/vendor/jquery.min.js"><\/script>')
         </script>
         <script src="js/main.js"></script>
-        <script src="js/alimentos.js"></script>
+        <script src="js/avaliacoes.js"></script>
         <script src="dist/js/bootstrap.min.js"></script>
     </body>
 </html>

@@ -130,6 +130,8 @@ btnNovo.click(function(){
 });
 
 modal.on('show.bs.modal', function(e){
+    $('#error-container').hide();
+    $('#input-nome').focus();
     controller.preencherForm(model); 
     
 });

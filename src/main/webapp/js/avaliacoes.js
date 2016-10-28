@@ -1,32 +1,41 @@
-var modelList = [
-    { id: 1, nome: 'Matheus Nunes', email: 'maths.nunes@gmail.com', sexo: 'M', idade: 26, peso: 84.3, altura: 1.83},
-    { id: 2, nome: 'Ana Claudia Casagrande Patricio', email: 'anaclaudiacpatricio@gmail.com', sexo: 'F', idade: 26, peso: 62, altura: 1.67}
-]
+var endpoint = 'http://localhost:8080/nutri-1.0-SNAPSHOT/api/avaliacao';
+var endpointUsuarios = 'http://localhost:8080/nutri-1.0-SNAPSHOT/api/usuario';
+var endpointDietas = 'http://localhost:8080/nutri-1.0-SNAPSHOT/api/dieta';
 
-var endpoint = 'http://localhost:8080/nutri-1.0-SNAPSHOT/api/usuario';
 var model;
 var modelTable = $('#modelTable');
 var modal = $("#modal");
 var btnSalvar = $('#btnSalvar');
 var btnNovo = $('#btnNovo');
 
-function Usuario(id, nome, email, sexo, idade, peso, altura) {
+function Avaliacao(id, id_usuario, id_dieta, data, peso, imc, taxa_basal) {
     this.id = id;
-    this.nome = nome;
-    this.email = email;
-    this.sexo = sexo;
-    this.idade = idade;
+    this.id_usuario = id_usuario;
+    this.id_dieta = id_dieta;
+    
+    this.nome = "Matheus Nunes"
+    // TODO: Recuperar nome da dieta e do usuario
+    
+    this.data = data;
     this.peso = peso;
-    this.altura = altura;
+    this.imc = imc;
+    this.taxaBasal = taxa_basal;
 }
 
 function Controller() {
-    
+
     function renderRow(data) {
         return "<tr id='model-" + data.id + "'>" +
                 "<td class='col-codigo'>" + data.id + "</td>" +
                 "<td>" + data.nome + "</td>" +
+                "<td>" + data.peso + "</td>" +
+                "<td>" + data.data + "</td>" +
+                "<td>" + data.imc + "</td>" +
+                "<td>" + data.taxa_basal + "</td>" +
                 "<td class='col-actions'>" +
+                "<a href='#' model-id='" + data.id + "' onClick='controller.editar(this)' class='btn btn-default btn-xs' role='button'>" +
+                "<span class='glyphicon glyphicon-info-sign'></span>" +
+                "</a>" +
                 "<a href='#' model-id='" + data.id + "' onClick='controller.editar(this)' class='btn btn-default btn-xs' role='button'>" +
                 "<span class='glyphicon glyphicon-pencil'></span>" +
                 "</a>" + 
@@ -46,14 +55,14 @@ function Controller() {
 
     function carregar() {
         $.get(endpoint, function(data) {
-            data.forEach(function(usuario){
-                appendRow(usuario);
+            data.forEach(function(alimento){
+                appendRow(alimento);
             });            
         });
     }
 
     function novo() {
-        model = new Usuario();
+        model = new Avaliacao();
         modal.modal('show');
     }
 
@@ -69,8 +78,8 @@ function Controller() {
     function excluir(element) {
         if (confirm('Tem certeza que deseja excluir o registro?')) {
             id = $(element).attr('model-id');
-
-             $.ajax({
+            
+            $.ajax({
                 url: endpoint + '?id=' + id,
                 method: 'DELETE'
             }).done(function(data) {
@@ -81,12 +90,23 @@ function Controller() {
 
     function preencherForm(model) {
         $('input[name=id]').val(model.id);
-        $('input[name=nome]').val(model.nome);
-        $('input[name=email]').val(model.email);
-        $('input[name=sexo]').val(model.sexo);
-        $('input[name=idade]').val(model.idade);
+        
+        $.get(endpointUsuarios, function(data) {
+            data.forEach(function(usuario){
+                $("#input-usuario").append('<option value="' + usuario.id + '">' + usuario.nome + '</option>');
+            });
+            $('input[name=id_usuario]').val(model.id_usuario);
+        });
+        
+        $.get(endpointDietas, function(data) {
+            data.forEach(function(dieta){
+                $("#input-dieta").append('<option value="' + dieta.id + '">' + dieta.nome + '</option>');
+            });
+            $('input[name=id_dieta]').val(model.id_dieta);
+        });
+        
         $('input[name=peso]').val(model.peso);
-        $('input[name=altura]').val(model.altura);
+        $('input[name=data]').val(model.data);
     }
 
     function salvar() {
@@ -97,13 +117,12 @@ function Controller() {
             method: 'POST',
             data: data,
             error: function(response) {
-                console.log(response);
                 response = $.parseJSON(response.responseText);
                 $("#error-container").html(response.mensagem).show();
             },
             success: function(response) {
                 response = $.parseJSON(response);
-
+                
                 if(data.id) {
                     replaceRow(response);
                 } else {
@@ -113,7 +132,6 @@ function Controller() {
                 modal.modal('hide');
             }
         });
-
     }
 
     return {
@@ -138,7 +156,7 @@ btnNovo.click(function(){
 
 modal.on('show.bs.modal', function(e){
     $('#error-container').hide();
-    $('#input-nome').focus();
+    $('#input-usuario').focus();
     controller.preencherForm(model);
 });
 

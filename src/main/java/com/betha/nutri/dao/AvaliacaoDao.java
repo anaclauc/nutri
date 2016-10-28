@@ -11,6 +11,10 @@ public class AvaliacaoDao {
 
     public Avaliacao inserir(Avaliacao avaliacao) throws Exception {
         try {
+            
+            avaliacao.calcularImc();
+            avaliacao.calcularTaxaBasal();
+            
             PreparedStatement paramStm = Conexao.get().getParamStm("INSERT INTO public.avaliacao(id, id_usuario, id_dieta, data, peso_atual, imc, taxa_basal)VALUES (?, ?, ?, ?, ?, ?, ?);");
             paramStm.setLong(1, avaliacao.getId_usuario());
             paramStm.setLong(2, avaliacao.getId_dieta());
@@ -29,6 +33,10 @@ public class AvaliacaoDao {
 
     public Avaliacao atualizar(Avaliacao avaliacao) throws Exception {
         try {
+            
+            avaliacao.calcularImc();
+            avaliacao.calcularTaxaBasal();
+            
             PreparedStatement stm = Conexao.get().getParamStm("UPDATE public.avaliacao SET id=?, id_usuario=?, id_dieta=?, data=?, peso_atual=?, imc=?, taxa_basal=? WHERE id=?;");
 
             stm.setLong(1, avaliacao.getId_usuario());
