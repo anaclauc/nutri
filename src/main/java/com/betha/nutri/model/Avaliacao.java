@@ -3,6 +3,7 @@ package com.betha.nutri.model;
 import com.betha.nutri.dao.DietaDao;
 import com.betha.nutri.dao.UsuarioDao;
 import com.betha.nutri.utils.Utils;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
@@ -16,9 +17,9 @@ public class Avaliacao implements Parseable {
     private Long id;
     private Long id_usuario;
     private Long id_dieta;
-    private double peso_atual;
-    private double imc;
-    private double taxa_basal;
+    private Double peso_atual;
+    private Double imc;
+    private Double taxa_basal;
 
     @Override
     public void parse(Map<String, String> values) {
@@ -60,15 +61,15 @@ public class Avaliacao implements Parseable {
         return data;
     }
     
-    public double getPeso_atual() {
+    public Double getPeso_atual() {
         return peso_atual;
     }
 
-    public void setPeso_atual(double peso_atual) {
+    public void setPeso_atual(Double peso_atual) {
         this.peso_atual = peso_atual;
     }
 
-    public double getImc() {
+    public Double getImc() {
         return imc;
     }
 
@@ -76,11 +77,11 @@ public class Avaliacao implements Parseable {
         this.imc = imc;
     }
 
-    public double getTaxa_basal() {
+    public Double getTaxa_basal() {
         return taxa_basal;
     }
 
-    public void setTaxa_basal(double taxa_basal) {
+    public void setTaxa_basal(Double taxa_basal) {
         this.taxa_basal = taxa_basal;
     }
 
@@ -130,7 +131,7 @@ public class Avaliacao implements Parseable {
         return true;
     }
 
-    public void calcularImc() throws Exception {
+    public void calcularImc() throws SQLException {
         UsuarioDao usuarioDao = new UsuarioDao();
         Usuario usuario = usuarioDao.buscar(id_usuario);
 
@@ -139,7 +140,7 @@ public class Avaliacao implements Parseable {
         }
     }
     
-    public void calcularTaxaBasal() throws Exception {
+    public void calcularTaxaBasal() throws SQLException {
         UsuarioDao usuarioDao = new UsuarioDao();
         Usuario usuario = usuarioDao.buscar(id_usuario);
 

@@ -100,25 +100,20 @@ public class UsuarioDao {
         return usuarios;
     }
 
-    public Usuario buscar(Long id) throws Exception {
+    public Usuario buscar(Long id) throws SQLException {
         if (id != null) {
-            try {
-                PreparedStatement stm = Conexao.get().getParamStm("SELECT * FROM usuarios WHERE id = ?");
-                stm.setLong(1, id);
-                ResultSet rs = stm.executeQuery();
+            PreparedStatement stm = Conexao.get().getParamStm("SELECT * FROM usuarios WHERE id = ?");
+            stm.setLong(1, id);
+            ResultSet rs = stm.executeQuery();
 
-                if (rs.next()) {
-                    return lerRegistro(rs);
-                }
-            } catch (SQLException ex) {
-                throw new Exception("Erro ao buscar o registro", ex);
+            if (rs.next()) {
+                return lerRegistro(rs);
             }
         }
 
         return null;
     }
 
-    
     public Usuario buscar(Usuario usuario) throws IllegalArgumentException, SQLException {
         PreparedStatement stm = Conexao.get().getParamStm("SELECT * FROM usuarios WHERE id != ? AND email = ?");
         stm.setLong(1, usuario.getId());
