@@ -8,14 +8,12 @@ var modal = $("#modal");
 var btnSalvar = $('#btnSalvar');
 var btnNovo = $('#btnNovo');
 
-function Avaliacao(id, id_usuario, id_dieta, data, peso, imc, taxa_basal) {
+function Avaliacao(id, id_usuario, id_dieta, usuario, dieta, data, peso, imc, taxa_basal) {
     this.id = id;
     this.id_usuario = id_usuario;
     this.id_dieta = id_dieta;
-    
-    this.nome = "Matheus Nunes"
-    // TODO: Recuperar nome da dieta e do usuario
-    
+    this.usuario = usuario;
+    this.dieta = dieta;
     this.data = data;
     this.peso = peso;
     this.imc = imc;
@@ -25,17 +23,16 @@ function Avaliacao(id, id_usuario, id_dieta, data, peso, imc, taxa_basal) {
 function Controller() {
 
     function renderRow(data) {
+        
         return "<tr id='model-" + data.id + "'>" +
                 "<td class='col-codigo'>" + data.id + "</td>" +
-                "<td>" + data.nome + "</td>" +
-                "<td>" + data.peso + "</td>" +
-                "<td>" + data.data + "</td>" +
-                "<td>" + data.imc + "</td>" +
-                "<td>" + data.taxa_basal + "</td>" +
+                "<td>" + data.usuario.nome + "</td>" +
+                "<td text-align='center'>" + data.peso + "</td>" +
+                "<td text-align='center'>" + data.data + "</td>" +
+                "<td text-align='center'>" + data.dieta.nome + "</td>" +
+                "<td text-align='center'>" + data.imc + "</td>" +
+                "<td text-align='center'>" + data.taxa_basal + "</td>" +
                 "<td class='col-actions'>" +
-                "<a href='#' model-id='" + data.id + "' onClick='controller.editar(this)' class='btn btn-default btn-xs' role='button'>" +
-                "<span class='glyphicon glyphicon-info-sign'></span>" +
-                "</a>" +
                 "<a href='#' model-id='" + data.id + "' onClick='controller.editar(this)' class='btn btn-default btn-xs' role='button'>" +
                 "<span class='glyphicon glyphicon-pencil'></span>" +
                 "</a>" + 
@@ -57,7 +54,7 @@ function Controller() {
         $.get(endpoint, function(data) {
             data.forEach(function(alimento){
                 appendRow(alimento);
-            });            
+            });
         });
     }
 
@@ -93,16 +90,23 @@ function Controller() {
         
         $.get(endpointUsuarios, function(data) {
             data.forEach(function(usuario){
-                $("#input-usuario").append('<option value="' + usuario.id + '">' + usuario.nome + '</option>');
+                if(model.id_usuario === usuario.id) {
+                    $("#input-usuario").append('<option value="' + usuario.id + '" selected="true">' + usuario.nome + '</option>');
+                } else {
+                    $("#input-usuario").append('<option value="' + usuario.id + '">' + usuario.nome + '</option>');
+                }
+                
             });
-            $('input[name=id_usuario]').val(model.id_usuario);
         });
         
         $.get(endpointDietas, function(data) {
             data.forEach(function(dieta){
-                $("#input-dieta").append('<option value="' + dieta.id + '">' + dieta.nome + '</option>');
+                if(model.id_dieta === dieta.id) {
+                    $("#input-dieta").append('<option value="' + dieta.id + '" selected="true">' + dieta.nome + '</option>');
+                } else {
+                    $("#input-dieta").append('<option value="' + dieta.id + '">' + dieta.nome + '</option>');
+                }
             });
-            $('input[name=id_dieta]').val(model.id_dieta);
         });
         
         $('input[name=peso]').val(model.peso);
@@ -156,6 +160,8 @@ btnNovo.click(function(){
 
 modal.on('show.bs.modal', function(e){
     $('#error-container').hide();
+    $('#input-usuario').empty();
+    $('#input-dieta').empty();
     $('#input-usuario').focus();
     controller.preencherForm(model);
 });

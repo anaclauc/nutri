@@ -1,17 +1,21 @@
 package com.betha.nutri.model;
 
+import com.betha.nutri.dao.DietaDao;
 import com.betha.nutri.dao.UsuarioDao;
 import com.betha.nutri.utils.Utils;
-import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Avaliacao implements Parseable {
 
+    private Date data = new java.util.Date();
     private Long id;
     private Long id_usuario;
     private Long id_dieta;
-    private Date data;
     private double peso_atual;
     private double imc;
     private double taxa_basal;
@@ -21,10 +25,7 @@ public class Avaliacao implements Parseable {
         this.id = Utils.parseLong(values.get("id"));
         this.id_usuario = Utils.parseLong(values.get("id_usuario"));
         this.id_dieta = Utils.parseLong(values.get("id_dieta"));
-        this.data = Date.valueOf(values.get("data"));
-        this.peso_atual = Utils.parseDouble(values.get("peso_atual"));
-        this.taxa_basal = Utils.parseDouble(values.get("taxa_basal"));
-        this.imc = Utils.parseDouble(values.get("imc"));
+        this.peso_atual = Utils.parseDouble(values.get("peso"));
     }
 
     public Long getId() {
@@ -51,14 +52,14 @@ public class Avaliacao implements Parseable {
         this.id_dieta = id_dieta;
     }
 
-    public Date getData() {
-        return data;
-    }
-
     public void setData(Date data) {
         this.data = data;
     }
-
+    
+    public Date getData() {
+        return data;
+    }
+    
     public double getPeso_atual() {
         return peso_atual;
     }
@@ -150,5 +151,24 @@ public class Avaliacao implements Parseable {
             }
         }
         
+    }
+    
+    @Override
+    public String toString() {
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            
+            UsuarioDao usuarioDao = new UsuarioDao();
+            Usuario usuario = usuarioDao.buscar(id_usuario);
+            
+            DietaDao dietaDao = new DietaDao();
+            Dieta dieta = dietaDao.buscar(id_dieta);
+            
+            return String.format("{\"id\":\"%s\", \"id_usuario\":\"%s\", \"id_dieta\":\"%s\", \"usuario\": %s, \"dieta\": %s, \"data\":\"%s\", \"peso\":\"%s\", \"imc\":\"%.2f\", \"taxa_basal\":\"%.2f\" }", id, id_usuario, id_dieta, usuario.toString(), dieta.toString(), dateFormat.format(data), peso_atual, imc, taxa_basal);
+        } catch (Exception ex) {
+            Logger.getLogger(Avaliacao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return "{}";
     }
 }

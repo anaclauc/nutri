@@ -47,6 +47,8 @@ public class AvaliacaoServlet extends HttpServlet {
             } else {
                 avaliacaoDao.inserir(avaliacao);
             }
+            
+            resp.getWriter().write(avaliacao.toString());
         } catch (Exception ex) {
             Logger.getLogger(AvaliacaoServlet.class.getName()).log(Level.SEVERE, null, ex);
         }

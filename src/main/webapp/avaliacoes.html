@@ -46,25 +46,18 @@
                                 <div class="form-group">
                                     <label for="id_usuario">Paciente</label>
                                     <select id="input-usuario" class="form-control" name="id_usuario">
-                                        <option value="">Selecione um usuario</option>
                                     </select>
                                 </div>
                                 
                                 <div class="form-group">
                                     <label for="id_dieta">Dieta</label>
                                     <select id="input-dieta" class="form-control" name="id_dieta">
-                                        <option value="">Selecione uma dieta</option>
                                     </select>
                                 </div>
                                 
                                 <div class="form-group">
                                     <label for="peso">Peso atual</label>
                                     <input id="peso" type="text" name="peso" class="form-control" placeholder="Peso atual" />
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label for="data">Data</label>
-                                    <input id="data" type="text" name="data" class="form-control" placeholder="Data" />
                                 </div>
                                 
                                 <input type="hidden" name="id" />
@@ -86,9 +79,11 @@
                     <tr>
                         <th class="col-codigo">Código</th>
                         <th>Paciente</th>
-                        <th>Peso</th>
-                        <th>Data avaliação</th>
-                        <th>Dieta</th>
+                        <th text-align='center'>Peso</th>
+                        <th text-align='center'>Data avaliação</th>
+                        <th text-align='center'>Dieta</th>
+                        <th text-align='center'>IMC</th>
+                        <th text-align='center'>Taxa basal</th>
                         <th class="col-actions">Ações</th>
                     </tr>
                 </thead>

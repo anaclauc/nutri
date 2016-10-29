@@ -1,6 +1,7 @@
 package com.betha.nutri.dao;
 
 import com.betha.nutri.model.Avaliacao;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,10 +16,10 @@ public class AvaliacaoDao {
             avaliacao.calcularImc();
             avaliacao.calcularTaxaBasal();
             
-            PreparedStatement paramStm = Conexao.get().getParamStm("INSERT INTO public.avaliacao(id, id_usuario, id_dieta, data, peso_atual, imc, taxa_basal)VALUES (?, ?, ?, ?, ?, ?, ?);");
+            PreparedStatement paramStm = Conexao.get().getParamStm("INSERT INTO public.avaliacao(id_usuario, id_dieta, data, peso_atual, imc, taxa_basal)VALUES (?, ?, ?, ?, ?, ?);");
             paramStm.setLong(1, avaliacao.getId_usuario());
             paramStm.setLong(2, avaliacao.getId_dieta());
-            paramStm.setDate(3, avaliacao.getData());
+            paramStm.setDate(3, new Date(avaliacao.getData().getTime()));
             paramStm.setDouble(4, avaliacao.getPeso_atual());
             paramStm.setDouble(5, avaliacao.getImc());
             paramStm.setDouble(6, avaliacao.getTaxa_basal());
@@ -37,14 +38,15 @@ public class AvaliacaoDao {
             avaliacao.calcularImc();
             avaliacao.calcularTaxaBasal();
             
-            PreparedStatement stm = Conexao.get().getParamStm("UPDATE public.avaliacao SET id=?, id_usuario=?, id_dieta=?, data=?, peso_atual=?, imc=?, taxa_basal=? WHERE id=?;");
+            PreparedStatement stm = Conexao.get().getParamStm("UPDATE public.avaliacao SET id_usuario=?, id_dieta=?, data=?, peso_atual=?, imc=?, taxa_basal=? WHERE id=?;");
 
             stm.setLong(1, avaliacao.getId_usuario());
             stm.setLong(2, avaliacao.getId_dieta());
-            stm.setDate(3, avaliacao.getData());
+            stm.setDate(3, new Date(avaliacao.getData().getTime()));
             stm.setDouble(4, avaliacao.getPeso_atual());
             stm.setDouble(5, avaliacao.getImc());
             stm.setDouble(6, avaliacao.getTaxa_basal());
+            stm.setLong(7, avaliacao.getId());
             stm.execute();
 
             return avaliacao;
@@ -103,6 +105,7 @@ public class AvaliacaoDao {
 
     private Avaliacao lerRegistro(ResultSet rs) throws SQLException {
         Avaliacao a = new Avaliacao();
+        a.setId(rs.getLong("id"));
         a.setId_usuario(rs.getLong("id_usuario"));
         a.setId_dieta(rs.getLong("id_dieta"));
         a.setData(rs.getDate("Data"));
