@@ -1,13 +1,9 @@
-var modelList = [
-    { id: 1, nome: 'Matheus Nunes', email: 'maths.nunes@gmail.com', sexo: 'M', idade: 26, peso: 84.3, altura: 1.83},
-    { id: 2, nome: 'Ana Claudia Casagrande Patricio', email: 'anaclaudiacpatricio@gmail.com', sexo: 'F', idade: 26, peso: 62, altura: 1.67}
-]
-
 var endpoint = 'http://localhost:8080/nutri-1.0-SNAPSHOT/api/usuario';
 var model;
 var modelTable = $('#modelTable');
 var modal = $("#modal");
 var btnSalvar = $('#btnSalvar');
+var btnBuscar = $('#btnBuscar');
 var btnNovo = $('#btnNovo');
 
 function Usuario(id, nome, email, sexo, idade, peso, altura) {
@@ -49,6 +45,17 @@ function Controller() {
             data.forEach(function(usuario){
                 appendRow(usuario);
             });            
+        });
+    }
+    
+    function buscar() {
+        var value = $('#input-busca').val();
+
+        $.get(endpoint + '?nome=' + value, function (data) {
+            modelTable.empty();
+            data.forEach(function (usuario) {
+                appendRow(usuario);
+            });
         });
     }
 
@@ -118,6 +125,7 @@ function Controller() {
 
     return {
         carregar: carregar,
+        buscar: buscar,
         novo: novo,
         salvar: salvar,
         editar: editar,
@@ -130,6 +138,10 @@ var controller = new Controller();
 
 btnSalvar.click(function(){
     controller.salvar();
+});
+
+btnBuscar.click(function(){
+   controller.buscar(); 
 });
 
 btnNovo.click(function(){

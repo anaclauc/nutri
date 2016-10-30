@@ -38,8 +38,7 @@ public final class Utils {
         while (params.hasMoreElements()) {
             String key = params.nextElement();
             String value = req.getParameter(key);
-            System.out.println("VALOR: " + key + ": " + value);
-            
+
             if(value != null) {
                 dados.put(key, value);
             }

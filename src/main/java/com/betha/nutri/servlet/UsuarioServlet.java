@@ -23,14 +23,18 @@ public class UsuarioServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             final String idUsuario = req.getParameter("id");
+            final String nome = req.getParameter("nome");
 
             resp.setContentType("application/json");
             resp.setCharacterEncoding("utf-8");
 
-            if (Utils.isNotEmpty(idUsuario)) {
+            if (Utils.isNotEmpty(nome)) {
+                ResponseBuilder builder = new ResponseBuilder();
+                resp.getWriter().write(builder.buildFromList(usuarioDao.buscar(nome)));
+            } else if (Utils.isNotEmpty(idUsuario)) {
                 final Usuario usuario = usuarioDao.buscar(Long.parseLong(idUsuario));
-                
-                if(usuario != null) {
+
+                if (usuario != null) {
                     resp.getWriter().write(usuario.toString());
                 } else {
                     resp.setStatus(404);
@@ -56,7 +60,7 @@ public class UsuarioServlet extends HttpServlet {
             } else {
                 usuarioDao.inserir(usuario);
             }
-            
+
             resp.getWriter().write(usuario.toString());
         } catch (IllegalArgumentException ex) {
             resp.setStatus(400);

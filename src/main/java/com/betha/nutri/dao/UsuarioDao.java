@@ -115,9 +115,17 @@ public class UsuarioDao {
     }
 
     public Usuario buscar(Usuario usuario) throws IllegalArgumentException, SQLException {
-        PreparedStatement stm = Conexao.get().getParamStm("SELECT * FROM usuarios WHERE id != ? AND email = ?");
-        stm.setLong(1, usuario.getId());
-        stm.setString(2, usuario.getEmail());
+        PreparedStatement stm = null;
+        
+        if (usuario.getId() == null) {
+            stm = Conexao.get().getParamStm("SELECT * FROM usuarios WHERE email = ?");
+            stm.setString(1, usuario.getEmail());
+        } else {
+            stm = Conexao.get().getParamStm("SELECT * FROM usuarios WHERE id != ? AND email = ?");
+            stm.setLong(1, usuario.getId());
+            stm.setString(2, usuario.getEmail());
+        }
+
         ResultSet rs = stm.executeQuery();
 
         if (rs.next()) {
@@ -125,6 +133,23 @@ public class UsuarioDao {
         }
 
         return null;
+    }
+
+    public List<Usuario> buscar(String nome) throws Exception {
+        List<Usuario> usuarios = new ArrayList<>();
+
+        try {
+            PreparedStatement stm = Conexao.get().getParamStm("SELECT * FROM usuarios WHERE nome LIKE '%" + nome + "%'");
+            ResultSet rs = stm.executeQuery();
+
+            while (rs.next()) {
+                usuarios.add(lerRegistro(rs));
+            }
+        } catch (SQLException ex) {
+            throw new Exception("Erro ao buscar o registro", ex);
+        }
+
+        return usuarios;
     }
 
     private Usuario lerRegistro(ResultSet rs) throws SQLException {

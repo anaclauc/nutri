@@ -6,6 +6,7 @@ var model;
 var modelTable = $('#modelTable');
 var modal = $("#modal");
 var btnSalvar = $('#btnSalvar');
+var btnBuscar = $('#btnBuscar');
 var btnNovo = $('#btnNovo');
 
 function Avaliacao(id, id_usuario, id_dieta, usuario, dieta, data, peso, imc, taxa_basal) {
@@ -54,6 +55,17 @@ function Controller() {
         $.get(endpoint, function(data) {
             data.forEach(function(alimento){
                 appendRow(alimento);
+            });
+        });
+    }
+    
+    function buscar() {
+        var value = $('#input-busca').val();
+
+        $.get(endpoint + '?nome=' + value, function (data) {
+            modelTable.empty();
+            data.forEach(function (usuario) {
+                appendRow(usuario);
             });
         });
     }
@@ -140,6 +152,7 @@ function Controller() {
 
     return {
         carregar: carregar,
+        buscar: buscar,
         novo: novo,
         salvar: salvar,
         editar: editar,
@@ -154,11 +167,16 @@ btnSalvar.click(function(){
     controller.salvar();
 });
 
+btnBuscar.click(function(){
+   controller.buscar(); 
+});
+
 btnNovo.click(function(){
     controller.novo();
 });
 
 modal.on('show.bs.modal', function(e){
+    $('[data-toggle="tooltip"]').tooltip();
     $('#error-container').hide();
     $('#input-usuario').empty();
     $('#input-dieta').empty();

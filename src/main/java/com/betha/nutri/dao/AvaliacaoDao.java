@@ -108,6 +108,23 @@ public class AvaliacaoDao {
             }
         }
     }
+    
+    public List<Avaliacao> buscar(String nome) throws Exception {
+        List<Avaliacao> avaliacoes = new ArrayList<>();
+
+        try {
+            PreparedStatement stm = Conexao.get().getParamStm("SELECT * FROM avaliacao JOIN usuarios ON (usuarios.id = avaliacao.id_usuario) WHERE usuarios.nome LIKE '%" + nome + "%'");
+            ResultSet rs = stm.executeQuery();
+
+            while (rs.next()) {
+                avaliacoes.add(lerRegistro(rs));
+            }
+        } catch (SQLException ex) {
+            throw new Exception("Erro ao buscar o registro", ex);
+        }
+
+        return avaliacoes;
+    }
 
     private Avaliacao lerRegistro(ResultSet rs) throws SQLException {
         Avaliacao a = new Avaliacao();

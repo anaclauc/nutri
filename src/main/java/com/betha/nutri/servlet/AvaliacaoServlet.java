@@ -23,11 +23,15 @@ public class AvaliacaoServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             final String idAvaliacao = req.getParameter("id");
+            final String nome = req.getParameter("nome");
 
             resp.setContentType("application/json");
             resp.setCharacterEncoding("utf-8");
 
-            if (Utils.isNotEmpty(idAvaliacao)) {
+            if (Utils.isNotEmpty(nome)) {
+                ResponseBuilder builder = new ResponseBuilder();
+                resp.getWriter().write(builder.buildFromList(avaliacaoDao.buscar(nome)));
+            } else if (Utils.isNotEmpty(idAvaliacao)) {
                 resp.getWriter().write(avaliacaoDao.buscar(Long.parseLong(idAvaliacao)).toString());
             } else {
                 ResponseBuilder builder = new ResponseBuilder();
@@ -49,7 +53,7 @@ public class AvaliacaoServlet extends HttpServlet {
             } else {
                 avaliacaoDao.inserir(avaliacao);
             }
-            
+
             resp.getWriter().write(avaliacao.toString());
         } catch (IllegalArgumentException ex) {
             resp.setStatus(400);
