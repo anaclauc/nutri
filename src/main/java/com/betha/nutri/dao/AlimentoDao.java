@@ -1,6 +1,7 @@
 package com.betha.nutri.dao;
 
 import com.betha.nutri.model.Alimento;
+import com.betha.nutri.model.Dieta;
 import com.betha.nutri.utils.Utils;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -87,6 +88,23 @@ public class AlimentoDao {
                 throw new Exception("Erro ao buscar o registro", ex);
             }
         }
+    }
+    
+    public List<Alimento> buscar(String descricao) throws Exception {
+        List<Alimento> alimentos = new ArrayList<>();
+
+        try {
+            PreparedStatement stm = Conexao.get().getParamStm("SELECT * FROM alimentos WHERE descricao LIKE '%" + descricao + "%'");
+            ResultSet rs = stm.executeQuery();
+
+            while (rs.next()) {
+                alimentos.add(lerRegistro(rs));
+            }
+        } catch (SQLException ex) {
+            throw new Exception("Erro ao buscar o registro", ex);
+        }
+
+        return alimentos;
     }
 
     private Alimento lerRegistro(ResultSet rs) throws SQLException {

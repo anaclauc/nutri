@@ -3,6 +3,7 @@ var model;
 var modelTable = $('#modelTable');
 var modal = $("#modal");
 var btnSalvar = $('#btnSalvar');
+var btnBuscar = $('#btnBuscar');
 var btnNovo = $('#btnNovo');
 
 function Alimento(id, descricao) {
@@ -19,7 +20,7 @@ function Controller() {
                 "<td class='col-actions'>" +
                 "<a href='#' model-id='" + data.id + "' onClick='controller.editar(this)' class='btn btn-default btn-xs' role='button'>" +
                 "<span class='glyphicon glyphicon-pencil'></span>" +
-                "</a>" + 
+                "</a>" +
                 "<a href='#' model-id='" + data.id + "' onClick='controller.excluir(this)' class='btn btn-default btn-xs' role='button'>" +
                 "<span class='glyphicon glyphicon-trash'></span>" +
                 "</a>" +
@@ -34,11 +35,22 @@ function Controller() {
         $('#model-' + data.id).replaceWith(renderRow(data));
     }
 
-    function carregar() {
-        $.get(endpoint, function(data) {
-            data.forEach(function(alimento){
+    function buscar() {
+        var value = $('#input-busca').val();
+
+        $.get(endpoint + '?descricao=' + value, function (data) {
+            modelTable.empty();
+            data.forEach(function (alimento) {
                 appendRow(alimento);
-            });            
+            });
+        });
+    }
+
+    function carregar() {
+        $.get(endpoint, function (data) {
+            data.forEach(function (alimento) {
+                appendRow(alimento);
+            });
         });
     }
 
@@ -49,8 +61,8 @@ function Controller() {
 
     function editar(element) {
         id = $(element).attr('model-id');
-        
-        $.get(endpoint + '?id=' + id, function(data) {
+
+        $.get(endpoint + '?id=' + id, function (data) {
             model = data;
             modal.modal('show');
         });
@@ -59,11 +71,11 @@ function Controller() {
     function excluir(element) {
         if (confirm('Tem certeza que deseja excluir o registro?')) {
             id = $(element).attr('model-id');
-            
+
             $.ajax({
                 url: endpoint + '?id=' + id,
                 method: 'DELETE'
-            }).done(function(data) {
+            }).done(function (data) {
                 $('#model-' + id).remove();
             });
         }
@@ -81,14 +93,14 @@ function Controller() {
             url: endpoint,
             method: 'POST',
             data: data,
-            error: function(response) {
+            error: function (response) {
                 response = $.parseJSON(response.responseText);
                 $("#error-container").html(response.mensagem).show();
             },
-            success: function(response) {
+            success: function (response) {
                 response = $.parseJSON(response);
-                
-                if(data.id) {
+
+                if (data.id) {
                     replaceRow(response);
                 } else {
                     appendRow(response);
@@ -101,6 +113,7 @@ function Controller() {
 
     return {
         carregar: carregar,
+        buscar: buscar,
         novo: novo,
         salvar: salvar,
         editar: editar,
@@ -111,15 +124,19 @@ function Controller() {
 
 var controller = new Controller();
 
-btnSalvar.click(function(){
+btnSalvar.click(function () {
     controller.salvar();
 });
 
-btnNovo.click(function(){
+btnBuscar.click(function(){
+   controller.buscar(); 
+});
+
+btnNovo.click(function () {
     controller.novo();
 });
 
-modal.on('show.bs.modal', function(e){
+modal.on('show.bs.modal', function (e) {
     $('#error-container').hide();
     $('#descricao').focus();
     controller.preencherForm(model);

@@ -29,7 +29,7 @@ function Controller() {
                 "<td>" + (data.usuario ? data.usuario.nome : '') + "</td>" +
                 "<td text-align='center'>" + data.peso + "</td>" +
                 "<td text-align='center'>" + data.data + "</td>" +
-                "<td text-align='center'>" + (data.dieta ? data.dieta.nome : '')  + "</td>" +
+                "<td text-align='center'>" + (data.dieta.nome != 'null' ? data.dieta.nome : '')  + "</td>" +
                 "<td text-align='center'>" + data.imc + "</td>" +
                 "<td text-align='center'>" + data.taxa_basal + "</td>" +
                 "<td class='col-actions'>" +
@@ -162,7 +162,7 @@ modal.on('show.bs.modal', function(e){
     $('#error-container').hide();
     $('#input-usuario').empty();
     $('#input-dieta').empty();
-    $('#input-dieta').append("<option value=''>Selecione uma dieta</option>");
+    $('#input-dieta').append("<option value='0'>Selecione uma dieta</option>");
     $('#input-usuario').focus();
     controller.preencherForm(model);
 });

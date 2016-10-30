@@ -58,20 +58,20 @@ public class DietaDao {
     }
 
     public List<Dieta> listarTodos() throws Exception {
-        List<Dieta> dieta = new ArrayList<>();
+        List<Dieta> dietas = new ArrayList<>();
 
         try {
             PreparedStatement stm = Conexao.get().getParamStm("SELECT * FROM dietas");
             ResultSet rs = stm.executeQuery();
 
             while (rs.next()) {
-                dieta.add(lerRegistro(rs));
+                dietas.add(lerRegistro(rs));
             }
         } catch (SQLException ex) {
             throw new Exception("Erro ao buscar o registro", ex);
         }
 
-        return dieta;
+        return dietas;
     }
 
     public Dieta buscar(Long id) throws Exception {
@@ -88,6 +88,23 @@ public class DietaDao {
                 throw new Exception("Erro ao buscar o registro", ex);
             }
         }
+    }
+    
+    public List<Dieta> buscar(String nome) throws Exception {
+        List<Dieta> dietas = new ArrayList<>();
+
+        try {
+            PreparedStatement stm = Conexao.get().getParamStm("SELECT * FROM dietas WHERE nome LIKE '%" + nome + "%'");
+            ResultSet rs = stm.executeQuery();
+
+            while (rs.next()) {
+                dietas.add(lerRegistro(rs));
+            }
+        } catch (SQLException ex) {
+            throw new Exception("Erro ao buscar o registro", ex);
+        }
+
+        return dietas;
     }
 
     private Dieta lerRegistro(ResultSet rs) throws SQLException {

@@ -56,11 +56,11 @@ public class Avaliacao implements Parseable {
     public void setData(Date data) {
         this.data = data;
     }
-    
+
     public Date getData() {
         return data;
     }
-    
+
     public Double getPeso_atual() {
         return peso_atual;
     }
@@ -136,40 +136,43 @@ public class Avaliacao implements Parseable {
         Usuario usuario = usuarioDao.buscar(id_usuario);
 
         if (usuario != null) {
-            imc = peso_atual / (usuario.getAltura()*2);
+            imc = peso_atual / (usuario.getAltura() * 2);
         }
     }
-    
+
     public void calcularTaxaBasal() throws SQLException {
         UsuarioDao usuarioDao = new UsuarioDao();
         Usuario usuario = usuarioDao.buscar(id_usuario);
 
         if (usuario != null) {
-            if("M".equalsIgnoreCase(usuario.getSexo())) {
+            if ("M".equalsIgnoreCase(usuario.getSexo())) {
                 taxa_basal = 66 + (13.7 * peso_atual) + (5 * usuario.getAltura()) - (6.8 * usuario.getIdade());
             } else {
                 taxa_basal = 655 + (9.6 * peso_atual) + (1.8 * usuario.getAltura()) - (4.7 * usuario.getIdade());
             }
         }
-        
+
     }
-    
+
     @Override
     public String toString() {
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            Dieta dieta = new Dieta();
             
             UsuarioDao usuarioDao = new UsuarioDao();
             Usuario usuario = usuarioDao.buscar(id_usuario);
-            
-            DietaDao dietaDao = new DietaDao();
-            Dieta dieta = dietaDao.buscar(id_dieta);
-            
+
+            if (id_dieta != 0) {
+                DietaDao dietaDao = new DietaDao();
+                dieta = dietaDao.buscar(id_dieta);
+            }
+
             return String.format("{\"id\":\"%s\", \"id_usuario\":\"%s\", \"id_dieta\":\"%s\", \"usuario\": %s, \"dieta\": %s, \"data\":\"%s\", \"peso\":\"%s\", \"imc\":\"%.2f\", \"taxa_basal\":\"%.2f\" }", id, id_usuario, id_dieta, usuario.toString(), dieta.toString(), dateFormat.format(data), peso_atual, imc, taxa_basal);
         } catch (Exception ex) {
             Logger.getLogger(Avaliacao.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return "{}";
     }
 }

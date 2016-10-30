@@ -3,6 +3,7 @@ var endpoint = 'http://localhost:8080/nutri-1.0-SNAPSHOT/api/dieta';
 var modelTable = $('#modelTable');
 var modal = $("#modal");
 var btnSalvar = $('#btnSalvar');
+var btnBuscar = $('#btnBuscar');
 var btnNovo = $('#btnNovo');
 
 function Dieta(id, nome, descricao) {
@@ -33,6 +34,17 @@ function Controller() {
 
     function replaceRow(data) {
         $('#model-' + data.id).replaceWith(renderRow(data));
+    }
+
+    function buscar() {
+        var value = $('#input-busca').val();
+        
+        $.get(endpoint + '?nome=' + value , function(data) {
+            modelTable.empty();
+            data.forEach(function(alimento){
+                appendRow(alimento);
+            });            
+        });
     }
 
     function carregar() {
@@ -110,6 +122,7 @@ function Controller() {
 
     return {
         carregar: carregar,
+        buscar: buscar,
         novo: novo,
         salvar: salvar,
         editar: editar,
@@ -123,6 +136,10 @@ var controller = new Controller();
 
 btnSalvar.click(function(){
     controller.salvar();
+});
+
+btnBuscar.click(function(){
+   controller.buscar(); 
 });
 
 btnNovo.click(function(){

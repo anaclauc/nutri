@@ -1,4 +1,3 @@
-
 package com.betha.nutri.servlet;
 
 import com.betha.nutri.dao.DietaDao;
@@ -17,18 +16,22 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet("/api/dieta")
 public class DietaServlet extends HttpServlet {
-    
+
     private final DietaDao dietaDao = new DietaDao();
-    
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             final String idDieta = req.getParameter("id");
+            final String nome = req.getParameter("nome");
 
             resp.setContentType("application/json");
             resp.setCharacterEncoding("utf-8");
 
-            if (Utils.isNotEmpty(idDieta)) {
+            if (Utils.isNotEmpty(nome)) {
+                ResponseBuilder builder = new ResponseBuilder();
+                resp.getWriter().write(builder.buildFromList(dietaDao.buscar(nome)));
+            } else if (Utils.isNotEmpty(idDieta)) {
                 resp.getWriter().write(dietaDao.buscar(Long.parseLong(idDieta)).toString());
             } else {
                 ResponseBuilder builder = new ResponseBuilder();
@@ -38,7 +41,7 @@ public class DietaServlet extends HttpServlet {
             Logger.getLogger(AlimentoServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Dieta dieta = new Dieta();
@@ -50,7 +53,7 @@ public class DietaServlet extends HttpServlet {
             } else {
                 dietaDao.inserir(dieta);
             }
-            
+
             resp.getWriter().write(dieta.toString());
         } catch (IllegalArgumentException ex) {
             resp.setStatus(400);
@@ -60,7 +63,7 @@ public class DietaServlet extends HttpServlet {
             resp.getWriter().write(new Erro("Erro interno ao salvar o registro").toString());
         }
     }
-    
+
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if (req.getParameter("id") == null) {
@@ -73,5 +76,5 @@ public class DietaServlet extends HttpServlet {
             }
         }
     }
-    
+
 }
