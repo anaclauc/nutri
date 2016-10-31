@@ -35,3 +35,9 @@
     -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
     transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
 }
+
+.info {
+    padding: 8px 15px;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+}
