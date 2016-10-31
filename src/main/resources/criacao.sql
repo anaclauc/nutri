@@ -104,6 +104,7 @@ CREATE TABLE avaliacao (
     id_dieta bigint,
     data date NOT NULL,
     peso_atual double precision NOT NULL,
+    taxa_atividade double precision NOT NULL,
     imc double precision NOT NULL,
     taxa_basal double precision NOT NULL
 );

@@ -18,6 +18,7 @@ public class Avaliacao implements Parseable {
     private Long id_usuario;
     private Long id_dieta;
     private Double peso_atual;
+    private Double taxa_atividade;
     private Double imc;
     private Double taxa_basal;
 
@@ -27,6 +28,7 @@ public class Avaliacao implements Parseable {
         this.id_usuario = Utils.parseLong(values.get("id_usuario"));
         this.id_dieta = Utils.parseLong(values.get("id_dieta"));
         this.peso_atual = Utils.parseDouble(values.get("peso"));
+        this.taxa_atividade = Utils.parseDouble(values.get("taxa_atividade"));
     }
 
     public Long getId() {
@@ -69,6 +71,14 @@ public class Avaliacao implements Parseable {
         this.peso_atual = peso_atual;
     }
 
+    public Double getTaxa_atividade() {
+        return taxa_atividade;
+    }
+
+    public void setTaxa_atividade(Double taxa_atividade) {
+        this.taxa_atividade = taxa_atividade;
+    }
+    
     public Double getImc() {
         return imc;
     }
@@ -88,13 +98,14 @@ public class Avaliacao implements Parseable {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 41 * hash + Objects.hashCode(this.id);
-        hash = 41 * hash + Objects.hashCode(this.id_usuario);
-        hash = 41 * hash + Objects.hashCode(this.id_dieta);
-        hash = 41 * hash + Objects.hashCode(this.data);
-        hash = 41 * hash + (int) (Double.doubleToLongBits(this.peso_atual) ^ (Double.doubleToLongBits(this.peso_atual) >>> 32));
-        hash = 41 * hash + (int) (Double.doubleToLongBits(this.imc) ^ (Double.doubleToLongBits(this.imc) >>> 32));
-        hash = 41 * hash + (int) (Double.doubleToLongBits(this.taxa_basal) ^ (Double.doubleToLongBits(this.taxa_basal) >>> 32));
+        hash = 43 * hash + Objects.hashCode(this.data);
+        hash = 43 * hash + Objects.hashCode(this.id);
+        hash = 43 * hash + Objects.hashCode(this.id_usuario);
+        hash = 43 * hash + Objects.hashCode(this.id_dieta);
+        hash = 43 * hash + Objects.hashCode(this.peso_atual);
+        hash = 43 * hash + Objects.hashCode(this.taxa_atividade);
+        hash = 43 * hash + Objects.hashCode(this.imc);
+        hash = 43 * hash + Objects.hashCode(this.taxa_basal);
         return hash;
     }
 
@@ -107,6 +118,9 @@ public class Avaliacao implements Parseable {
             return false;
         }
         final Avaliacao other = (Avaliacao) obj;
+        if (!Objects.equals(this.data, other.data)) {
+            return false;
+        }
         if (!Objects.equals(this.id, other.id)) {
             return false;
         }
@@ -116,16 +130,16 @@ public class Avaliacao implements Parseable {
         if (!Objects.equals(this.id_dieta, other.id_dieta)) {
             return false;
         }
-        if (!Objects.equals(this.data, other.data)) {
+        if (!Objects.equals(this.peso_atual, other.peso_atual)) {
             return false;
         }
-        if (Double.doubleToLongBits(this.peso_atual) != Double.doubleToLongBits(other.peso_atual)) {
+        if (!Objects.equals(this.taxa_atividade, other.taxa_atividade)) {
             return false;
         }
-        if (Double.doubleToLongBits(this.imc) != Double.doubleToLongBits(other.imc)) {
+        if (!Objects.equals(this.imc, other.imc)) {
             return false;
         }
-        if (Double.doubleToLongBits(this.taxa_basal) != Double.doubleToLongBits(other.taxa_basal)) {
+        if (!Objects.equals(this.taxa_basal, other.taxa_basal)) {
             return false;
         }
         return true;
@@ -146,9 +160,9 @@ public class Avaliacao implements Parseable {
 
         if (usuario != null) {
             if ("M".equalsIgnoreCase(usuario.getSexo())) {
-                taxa_basal = 66 + (13.7 * peso_atual) + (5 * usuario.getAltura()) - (6.8 * usuario.getIdade());
+                taxa_basal = taxa_atividade * (66 + (13.7 * peso_atual) + (5 * usuario.getAltura()) - (6.8 * usuario.getIdade()));
             } else {
-                taxa_basal = 655 + (9.6 * peso_atual) + (1.8 * usuario.getAltura()) - (4.7 * usuario.getIdade());
+                taxa_basal = taxa_atividade * (655 + (9.6 * peso_atual) + (1.8 * usuario.getAltura()) - (4.7 * usuario.getIdade()));
             }
         }
 
@@ -168,7 +182,7 @@ public class Avaliacao implements Parseable {
                 dieta = dietaDao.buscar(id_dieta);
             }
 
-            return String.format("{\"id\":\"%s\", \"id_usuario\":\"%s\", \"id_dieta\":\"%s\", \"usuario\": %s, \"dieta\": %s, \"data\":\"%s\", \"peso\":\"%s\", \"imc\":\"%.2f\", \"taxa_basal\":\"%.2f\" }", id, id_usuario, id_dieta, usuario.toString(), dieta.toString(), dateFormat.format(data), peso_atual, imc, taxa_basal);
+            return String.format("{\"id\":\"%s\", \"id_usuario\":\"%s\", \"id_dieta\":\"%s\", \"usuario\": %s, \"dieta\": %s, \"data\":\"%s\", \"peso\":\"%s\", \"taxa_atividade\":\"%s\",  \"imc\":\"%.2f\", \"taxa_basal\":\"%.2f\" }", id, id_usuario, id_dieta, usuario.toString(), dieta.toString(), dateFormat.format(data), peso_atual, taxa_atividade, imc, taxa_basal);
         } catch (Exception ex) {
             Logger.getLogger(Avaliacao.class.getName()).log(Level.SEVERE, null, ex);
         }

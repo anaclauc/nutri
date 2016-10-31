@@ -9,7 +9,7 @@ var btnSalvar = $('#btnSalvar');
 var btnBuscar = $('#btnBuscar');
 var btnNovo = $('#btnNovo');
 
-function Avaliacao(id, id_usuario, id_dieta, usuario, dieta, data, peso, imc, taxa_basal) {
+function Avaliacao(id, id_usuario, id_dieta, usuario, dieta, data, peso, taxa_atividade, imc, taxa_basal) {
     this.id = id;
     this.id_usuario = id_usuario;
     this.id_dieta = id_dieta;
@@ -17,6 +17,7 @@ function Avaliacao(id, id_usuario, id_dieta, usuario, dieta, data, peso, imc, ta
     this.dieta = dieta;
     this.data = data;
     this.peso = peso;
+    this.taxaAtividade = taxa_atividade;
     this.imc = imc;
     this.taxaBasal = taxa_basal;
 }
@@ -122,6 +123,7 @@ function Controller() {
         });
         
         $('input[name=peso]').val(model.peso);
+        $('input[name=taxa_atividade]').val(model.taxaAtividade);
         $('input[name=data]').val(model.data);
     }
 

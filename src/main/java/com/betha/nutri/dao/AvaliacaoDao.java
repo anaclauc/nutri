@@ -24,13 +24,14 @@ public class AvaliacaoDao {
         avaliacao.calcularImc();
         avaliacao.calcularTaxaBasal();
 
-        PreparedStatement paramStm = Conexao.get().getParamStm("INSERT INTO public.avaliacao(id_usuario, id_dieta, data, peso_atual, imc, taxa_basal)VALUES (?, ?, ?, ?, ?, ?) RETURNING id;");
+        PreparedStatement paramStm = Conexao.get().getParamStm("INSERT INTO public.avaliacao(id_usuario, id_dieta, data, peso_atual, taxa_atividade, imc, taxa_basal)VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id;");
         paramStm.setLong(1, avaliacao.getId_usuario());
         paramStm.setLong(2, avaliacao.getId_dieta());
         paramStm.setDate(3, new Date(avaliacao.getData().getTime()));
         paramStm.setDouble(4, avaliacao.getPeso_atual());
-        paramStm.setDouble(5, avaliacao.getImc());
-        paramStm.setDouble(6, avaliacao.getTaxa_basal());
+        paramStm.setDouble(5, avaliacao.getTaxa_atividade());
+        paramStm.setDouble(6, avaliacao.getImc());
+        paramStm.setDouble(7, avaliacao.getTaxa_basal());
 
         ResultSet rs = paramStm.executeQuery();
 
@@ -48,15 +49,16 @@ public class AvaliacaoDao {
         avaliacao.calcularImc();
         avaliacao.calcularTaxaBasal();
 
-        PreparedStatement stm = Conexao.get().getParamStm("UPDATE public.avaliacao SET id_usuario=?, id_dieta=?, data=?, peso_atual=?, imc=?, taxa_basal=? WHERE id=?;");
+        PreparedStatement stm = Conexao.get().getParamStm("UPDATE public.avaliacao SET id_usuario=?, id_dieta=?, data=?, peso_atual=?, taxa_atividade=?, imc=?, taxa_basal=? WHERE id=?;");
 
         stm.setLong(1, avaliacao.getId_usuario());
         stm.setLong(2, avaliacao.getId_dieta());
         stm.setDate(3, new Date(avaliacao.getData().getTime()));
         stm.setDouble(4, avaliacao.getPeso_atual());
-        stm.setDouble(5, avaliacao.getImc());
-        stm.setDouble(6, avaliacao.getTaxa_basal());
-        stm.setLong(7, avaliacao.getId());
+        stm.setDouble(5, avaliacao.getTaxa_atividade());
+        stm.setDouble(6, avaliacao.getImc());
+        stm.setDouble(7, avaliacao.getTaxa_basal());
+        stm.setLong(8, avaliacao.getId());
         stm.execute();
 
         return avaliacao;
@@ -133,6 +135,7 @@ public class AvaliacaoDao {
         a.setId_dieta(rs.getLong("id_dieta"));
         a.setData(rs.getDate("Data"));
         a.setPeso_atual(rs.getDouble("peso_atual"));
+        a.setTaxa_atividade(rs.getDouble("taxa_atividade"));
         a.setImc(rs.getDouble("imc"));
         a.setTaxa_basal(rs.getDouble("taxa_basal"));
         return a;

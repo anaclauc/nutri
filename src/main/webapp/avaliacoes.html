@@ -76,6 +76,17 @@
                                     </label>
                                     <input id="peso" type="text" name="peso" class="form-control" placeholder="Peso atual" />
                                 </div>
+                                
+                                <div class="form-group">
+                                    <label for="taxa_atividade">Taxa de atividade</label>
+                                    <select id="input-taxa-atividade" class="form-control" name="taxa_atividade">
+                                        <option value="1.2">Sedentário (pouco ou nenhum exercicio)</option>
+                                        <option value="1.375">Levemente ativo (exercicio leve 1 a 3 dias por semana)</option>
+                                        <option value="1.55">Moderadamente ativo (exercicio moderado, faz esportes 3 a 5 dias por semana)</option>
+                                        <option value="1.725">Altamente ativo (exercicio pesado 5 a 6 dias por semana)</option>
+                                        <option value="1.9">Extremamente ativo (exercicio pesado diariamente e até 2 vezes por dia)</option>
+                                    </select>
+                                </div>
 
                                 <input type="hidden" name="id" />
                             </form>
